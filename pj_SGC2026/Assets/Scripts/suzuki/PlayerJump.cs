@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerJump : MonoBehaviour
 {
 	public float jumpForce = 7f;
+	public float fallMultiplier = 2.5f;
 	public int maxJumpCount = 2;
 
 	private int jumpCount;
@@ -49,7 +50,13 @@ public class PlayerJump : MonoBehaviour
 			jumpCount++;
 		}
 	}
-
+	private void FixedUpdate()
+	{
+		if (rb.linearVelocity.y<0)
+		{
+			rb.linearVelocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+		}
+	}
 	// 接地判定
 	private void OnTriggerEnter(Collider other)
 	{
