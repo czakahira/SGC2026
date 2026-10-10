@@ -26,6 +26,12 @@ public class SimpleTimer
 	/// フラグ：カウントダウン
 	/// </summary>
 	[SerializeField] protected bool m_Reverse;
+	/// <summary>
+	/// フラグ：ループ
+	/// </summary>
+	[SerializeField] protected bool m_Loop;
+
+	protected bool m_IsElapsed = false;
 
 	// ========================================
 	//  Property
@@ -40,22 +46,42 @@ public class SimpleTimer
 		get { return m_Reverse; }
 		set { m_Reverse = value; }
 	}
+	public bool loop
+	{
+		get { return m_Loop; }
+		set { m_Loop = value; }
+	}
 	/// <summary>
 	/// 進捗率
 	/// </summary>
 	public float progress => (m_ElapedTime / m_Duration);
+
+	
 
 	// ========================================
 	//  Method
 	// ========================================
 	public void Run(float _dt)
 	{
+		m_IsElapsed = false;
+
 		m_ElapedTime += _dt * (m_Reverse == true ? -1f : 1f);
 		m_ElapedTime = Mathf.Clamp(m_ElapedTime, 0, m_Duration);
+
+		bool isElapsedWasFrame = m_Reverse == true ? m_ElapedTime <= 0 : m_ElapedTime >= m_Duration;
+		if (isElapsedWasFrame == true) {
+			m_IsElapsed = true;
+
+			if (loop == true) {
+				Reset();
+			}
+		}
+
+
 	}
 	public bool IsElapsed()
 	{
-		return m_Reverse == true ? m_ElapedTime <= 0 : m_ElapedTime >= m_Duration;
+		return m_IsElapsed;
 	}
 	public bool Alrm(float _dt)
 	{
@@ -63,12 +89,17 @@ public class SimpleTimer
 		return IsElapsed();
 	}
 
+	public void SetElapsed(float _value)
+	{
+		m_ElapedTime = _value;
+	}
 	/// <summary>
 	/// リセット
 	/// </summary>
 	public void Reset()
 	{
-		m_ElapedTime = (m_Reverse == true) ? m_Duration : 0f;
+		SetElapsed( (m_Reverse == true) ? m_Duration : 0f );
 	}
+	
 
 }

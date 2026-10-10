@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -36,20 +37,15 @@ public class TitleManager : MonoBehaviour
 	/// <summary>
 	/// ボタン：スタート
 	/// </summary>
-	[SerializeField] protected Button m_Btn_Start;
+	[SerializeField] protected UITitleButton m_Btn_Start;
 	/// <summary>
 	/// ボタン：クレジット
 	/// </summary>
-	[SerializeField] protected Button m_Btn_ToCredit;
+	[SerializeField] protected UITitleButton m_Btn_ToCredit;
 	/// <summary>
 	/// ボタン：クレジットを閉じる
 	/// </summary>
-	[SerializeField] protected Button m_Btn_FromCredit;
-
-	/// <summary>
-	/// ステート
-	/// </summary>
-	[SerializeField] protected EState m_State;
+	[SerializeField] protected UIButton m_Btn_FromCredit;
 
 
 	/// <summary>
@@ -72,6 +68,21 @@ public class TitleManager : MonoBehaviour
 	/// 
 	/// </summary>
 	[SerializeField] protected SimpleTimer m_CreditSlidTimer;
+
+	/// <summary>
+	/// ニンゲン
+	/// </summary>
+	[SerializeField] protected RectTransform m_Player;
+
+	[SerializeField] protected float m_PlayerWalkAnim_Duration;
+	protected SimpleTimer m_PlayerWalkAnim_Timer;
+	[SerializeField] protected Vector3 m_PlayerWalk_Euler_In;
+	[SerializeField] protected Vector3 m_PlayerWalk_Euler_Out;
+
+	/// <summary>
+	/// ステート
+	/// </summary>
+	[SerializeField] protected EState m_State;
 
 	// ========================================
 	//  Method
@@ -112,7 +123,7 @@ public class TitleManager : MonoBehaviour
 	/// <summary>
 	/// コールバック：開始
 	/// </summary>
-	protected void OnStart()
+	protected void OnStart(PointerEventData _data)
 	{
 		// 無効
 		if (IsState(EState.Title_Loop) == false) { return; }
@@ -126,7 +137,7 @@ public class TitleManager : MonoBehaviour
 	/// <summary>
 	/// コールバック：クレジットを開く
 	/// </summary>
-	protected void OnCredit_Open()
+	protected void OnCredit_Open(PointerEventData _data)
 	{
 		if (IsState(EState.Title_Loop) == false) { return; }
 
@@ -136,9 +147,12 @@ public class TitleManager : MonoBehaviour
 	/// <summary>
 	/// コールバック：クレジットを閉じる
 	/// </summary>
-	protected void OnCredit_Close()
+	protected void OnCredit_Close(PointerEventData _data)
 	{
 		if (IsState(EState.Credit_Loop) == false) { return; }
+
+		m_Btn_Start.Init();
+		m_Btn_ToCredit.Init();
 
 		// 
 		SetState(EState.Credit_Close);
@@ -154,12 +168,15 @@ public class TitleManager : MonoBehaviour
 		m_CreditSlidTimer.duration = m_CreditAnimDuration;
 		m_CreditSlidTimer.reverse = false;
 
+		m_PlayerWalkAnim_Timer = new SimpleTimer();
+		m_PlayerWalkAnim_Timer.duration = m_PlayerWalkAnim_Duration;
+
 		m_Credit.anchoredPosition = m_Credit_StartPos;
 
 		// コールバック
-		m_Btn_Start.onClick.AddListener(OnStart);
-		m_Btn_ToCredit.onClick.AddListener(OnCredit_Open);
-		m_Btn_FromCredit.onClick.AddListener(OnCredit_Close);
+		m_Btn_Start.onClick += OnStart;
+		m_Btn_ToCredit.onClick += OnCredit_Open;
+		m_Btn_FromCredit.onClick += OnCredit_Close;
 
 		AudioManager.PlayBGN(EBGM.Title);
 
@@ -169,6 +186,11 @@ public class TitleManager : MonoBehaviour
 	{
 		float dt = Time.deltaTime;
 
+		m_PlayerWalkAnim_Timer.Run(dt);
+		m_Player.localRotation = Quaternion.Lerp(Quaternion.Euler(m_PlayerWalk_Euler_In), Quaternion.Euler(m_PlayerWalk_Euler_Out), m_PlayerWalkAnim_Timer.progress);
+		if (m_PlayerWalkAnim_Timer.IsElapsed() == true) {
+			m_PlayerWalkAnim_Timer.reverse = m_PlayerWalkAnim_Timer.reverse == false;
+		}
 
 		switch (m_State) {
 			case EState.Title_Loop:
