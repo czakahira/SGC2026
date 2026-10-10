@@ -201,6 +201,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""ChengeGreen"",
+                    ""type"": ""Button"",
+                    ""id"": ""9f5dad08-e4cb-4b88-adbe-52fbe98290aa"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -525,6 +535,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""b082f96f-c8ae-4af3-82eb-063da377c5cc"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""1534dc16-a6aa-499d-9c3a-22b47347b52a"",
                     ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
@@ -602,12 +623,56 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""9758452c-900c-4df7-b717-a14a0a2ae752"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChengeRed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""8f80d1de-3782-4a63-9fde-156a22e734cc"",
                     ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""ChengeBlue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a738392b-4ae4-4081-ac2f-44898b6173b0"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChengeBlue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""394f6b02-855d-4583-a326-6731140f0419"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChengeGreen"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ccfcc53-f87d-40e5-8b2a-5235c9d9df64"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChengeGreen"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1216,6 +1281,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_ChengeRed = m_Player.FindAction("ChengeRed", throwIfNotFound: true);
         m_Player_ChengeBlue = m_Player.FindAction("ChengeBlue", throwIfNotFound: true);
+        m_Player_ChengeGreen = m_Player.FindAction("ChengeGreen", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1320,6 +1386,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_ChengeRed;
     private readonly InputAction m_Player_ChengeBlue;
+    private readonly InputAction m_Player_ChengeGreen;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1375,6 +1442,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/ChengeBlue".
         /// </summary>
         public InputAction @ChengeBlue => m_Wrapper.m_Player_ChengeBlue;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ChengeGreen".
+        /// </summary>
+        public InputAction @ChengeGreen => m_Wrapper.m_Player_ChengeGreen;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1434,6 +1505,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ChengeBlue.started += instance.OnChengeBlue;
             @ChengeBlue.performed += instance.OnChengeBlue;
             @ChengeBlue.canceled += instance.OnChengeBlue;
+            @ChengeGreen.started += instance.OnChengeGreen;
+            @ChengeGreen.performed += instance.OnChengeGreen;
+            @ChengeGreen.canceled += instance.OnChengeGreen;
         }
 
         /// <summary>
@@ -1478,6 +1552,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ChengeBlue.started -= instance.OnChengeBlue;
             @ChengeBlue.performed -= instance.OnChengeBlue;
             @ChengeBlue.canceled -= instance.OnChengeBlue;
+            @ChengeGreen.started -= instance.OnChengeGreen;
+            @ChengeGreen.performed -= instance.OnChengeGreen;
+            @ChengeGreen.canceled -= instance.OnChengeGreen;
         }
 
         /// <summary>
@@ -1855,6 +1932,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnChengeBlue(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ChengeGreen" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnChengeGreen(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

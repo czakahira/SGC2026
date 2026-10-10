@@ -2,22 +2,44 @@ using UnityEngine;
 
 public class ColorObstacles : MonoBehaviour
 {
-    public ColorType ObstacleColor;
+	public ColorType obstacleColor;
+
+	// ★ここは“壁本体”のコライダーだけ
+	[SerializeField] private Collider obstacleCol;
+
+	private void Awake()
+	{
+		// Inspector で入れるならここはなくてもOK
+		if (obstacleCol == null)
+			obstacleCol = GetComponent<Collider>();
+	}
+
+	private void Update()
+	{
+		var player = PlayerColor.instance;
+		if (player == null) return;
+
+		var playerCol = player.GetComponent<Collider>();
+		if (playerCol == null) return;
+
+		bool sameColor = (player.currentColor == obstacleColor);
+
+		// 壁本体との衝突だけを無効化
+		Physics.IgnoreCollision(playerCol, obstacleCol, sameColor);
+	}
+
 	private void OnCollisionEnter(Collision collision)
 	{
-		//プレイヤー確認
-		PlayerColor playerColor = collision.gameObject.GetComponent<PlayerColor>();
-		if (playerColor == null) return;
-		//色一致確認
-		if (playerColor.currentColor == ObstacleColor)
+		var player = collision.gameObject.GetComponent<PlayerColor>();
+		if (player == null) return;
+
+		if (player.currentColor != obstacleColor)
 		{
-		    //すり抜け
-			Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
-		}
-		else
-		{
-		　　//衝突
-			Debug.Log("衝突！");
+			PlayerLife.instance.ReduceLife();
+
+			var respawn = collision.gameObject.GetComponent<PlayerRespawn>();
+			if (respawn != null)
+				respawn.Respawn();
 		}
 	}
 }
