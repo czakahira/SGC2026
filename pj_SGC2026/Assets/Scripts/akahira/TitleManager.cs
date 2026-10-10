@@ -146,6 +146,10 @@ public class TitleManager : MonoBehaviour
 
 	void Awake()
 	{
+
+	}
+	void Start()
+	{
 		m_CreditSlidTimer = new SimpleTimer();
 		m_CreditSlidTimer.duration = m_CreditAnimDuration;
 		m_CreditSlidTimer.reverse = false;
@@ -160,10 +164,6 @@ public class TitleManager : MonoBehaviour
 		AudioManager.PlayBGN(EBGM.Title);
 
 		SetState(EState.Title_Loop);
-	}
-	void Start()
-	{
-		
 	}
 	void Update()
 	{

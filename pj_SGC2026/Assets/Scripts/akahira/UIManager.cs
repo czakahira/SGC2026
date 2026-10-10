@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -19,6 +20,9 @@ public class UIManager : SingletonBehaviour<UIManager>
 	[SerializeField] protected CanvasGroup m_Fader;
 
 
+	public event UnityAction<float> onUpdate;
+
+
 	protected override void Init()
 	{
 		base.Init();
@@ -32,7 +36,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
 	protected void OnUpdate(float _dt)
 	{
-
+		onUpdate?.Invoke(_dt);
 	}
 
 }

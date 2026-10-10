@@ -8,6 +8,10 @@ public enum EBGM
 	Title,
 
 	Main,
+
+	Goal,
+
+	GameOver,
 }
 
 /// <summary>
