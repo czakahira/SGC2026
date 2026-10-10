@@ -1,7 +1,9 @@
 
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using NUnit.Framework.Internal.Filters;
 
 /// <summary>
 /// シーン：タイトル
@@ -10,12 +12,19 @@ public class TitleManager : MonoBehaviour
 {
 	public enum EState
 	{
-		None,
+		None = -1,
 
 		/// <summary>
-		/// タイトル
+		/// 選択待ち
 		/// </summary>
 		Title_Loop,
+
+		/// <summary>
+		/// ステージセレクト
+		/// </summary>
+		StageSelect_Open,
+		StageSelect_Loop,
+		StageSelect_Close,
 
 		/// <summary>
 		/// クレジット
@@ -42,32 +51,15 @@ public class TitleManager : MonoBehaviour
 	/// ボタン：クレジット
 	/// </summary>
 	[SerializeField] protected UITitleButton m_Btn_ToCredit;
-	/// <summary>
-	/// ボタン：クレジットを閉じる
-	/// </summary>
-	[SerializeField] protected UIButton m_Btn_FromCredit;
-
 
 	/// <summary>
-	/// UI：クレジット
+	/// UI：ステージセレクト
 	/// </summary>
-	[SerializeField] protected RectTransform m_Credit;
+	[SerializeField] protected UITitleStageSelectWindow m_StageSelect;
 	/// <summary>
-	/// 
+	/// UI：スタッフ
 	/// </summary>
-	[SerializeField] protected float m_CreditAnimDuration;
-	/// <summary>
-	/// 
-	/// </summary>
-	[SerializeField] protected AnimationCurve m_CreditAnimCurve;
-	/// <summary>
-	/// クレジットUIの初期位置
-	/// </summary>
-	[SerializeField] protected Vector2 m_Credit_StartPos;
-	/// <summary>
-	/// 
-	/// </summary>
-	[SerializeField] protected SimpleTimer m_CreditSlidTimer;
+	[SerializeField] protected UITitleStaffWIndow m_Staff;
 
 	/// <summary>
 	/// ニンゲン
@@ -84,6 +76,15 @@ public class TitleManager : MonoBehaviour
 	/// </summary>
 	[SerializeField] protected EState m_State;
 
+	/// <summary>
+	/// ボタン：タイトルで選択するもの一覧
+	/// </summary>
+	protected UITitleButton[] m_Btn_Titles;
+	/// <summary>
+	/// 選択中のボタン
+	/// </summary>
+	protected int m_CurrentSelectedTitleBtnIdx = -1;
+
 	// ========================================
 	//  Method
 	// ========================================
@@ -95,14 +96,31 @@ public class TitleManager : MonoBehaviour
 			case EState.Title_Loop:
 				break;
 
+			case EState.StageSelect_Open:
+				m_StageSelect.btnClose.blockRaycasts = true;
+				m_StageSelect.btnClose.interactable = true;
+				m_StageSelect.Open();
+				break;
+			case EState.StageSelect_Loop:
+				break;
+			case EState.StageSelect_Close:
+				m_StageSelect.btnClose.blockRaycasts = false;
+				m_StageSelect.btnClose.interactable = false;
+				m_StageSelect.Close();
+				break;
+
+
 			case EState.Credit_Open:
-				m_CreditSlidTimer.reverse = false;
+				m_Staff.btnClose.blockRaycasts = true;
+				m_Staff.btnClose.interactable = true;
+				m_Staff.Open();
 				break;
 			case EState.Credit_Loop:
-
 				break;
 			case EState.Credit_Close:
-				m_CreditSlidTimer.reverse = true;
+				m_Staff.btnClose.blockRaycasts = false;
+				m_Staff.btnClose.interactable = false;
+				m_Staff.Close();
 				break;
 
 			case EState.ToMain:
@@ -120,43 +138,121 @@ public class TitleManager : MonoBehaviour
 		return m_State == _state;
 	}
 
-	/// <summary>
-	/// コールバック：開始
-	/// </summary>
-	protected void OnStart(PointerEventData _data)
+	protected int GetTitleBtnIdx(UIBehaviour _btn)
 	{
-		// 無効
-		if (IsState(EState.Title_Loop) == false) { return; }
-
-		// BGM止める
-		AudioManager.StopBGN(EBGM.Title);
-
-		// 次へ
-		SetState(EState.ToMain);
+		for (int i = 0; i < m_Btn_Titles.Length; i++) {
+			if (m_Btn_Titles[i] == _btn) {
+				return i;
+			}
+		}
+		return -1;
 	}
 	/// <summary>
-	/// コールバック：クレジットを開く
+	/// 指定ボタンを選択状態にする
 	/// </summary>
-	protected void OnCredit_Open(PointerEventData _data)
+	protected void SetSelectTitleBtn(int _idx, bool _se = true)
 	{
-		if (IsState(EState.Title_Loop) == false) { return; }
+		m_CurrentSelectedTitleBtnIdx = _idx;
 
+		for (int i = 0; i < m_Btn_Titles.Length; i++) {
+			bool isSelected = (i == _idx);
+			if (_se == true) {
+				if (isSelected == true) {
+					AudioManager.PlaySE(ESE.Decide_12, 0);
+				}
+			}
+			m_Btn_Titles[i].SetSelected(isSelected == true);
+		}
+	}
+	/// <summary>
+	/// ステージセレクト：開く
+	/// </summary>
+	protected void Open_StageSelect()
+	{
+		AudioManager.PlaySE(ESE.Decide_31, 0);
+		// 次へ
+		SetState(EState.StageSelect_Open);
+	}
+	/// <summary>
+	/// ステージセレクト：閉じる
+	/// </summary>
+	protected void Close_StageSelect()
+	{
+		// 全てのボタンを初期化
+		foreach (var btn in m_Btn_Titles) {
+			btn.Init();
+		}
+		// 【ステージセレクト】を選択済みにしておく
+		SetSelectTitleBtn(GetTitleBtnIdx(m_Btn_Start), false);
+
+		AudioManager.PlaySE(ESE.Decide_31, 0);
+		// 
+		SetState(EState.StageSelect_Close);
+	}
+	/// <summary>
+	/// スタッフ：開く
+	/// </summary>
+	protected void Open_Staff()
+	{
+		AudioManager.PlaySE(ESE.Decide_31, 0);
 		// クレジットを開く
 		SetState(EState.Credit_Open);
 	}
 	/// <summary>
-	/// コールバック：クレジットを閉じる
+	/// スタッフ：閉じる
 	/// </summary>
-	protected void OnCredit_Close(PointerEventData _data)
+	protected void Close_Staff()
 	{
-		if (IsState(EState.Credit_Loop) == false) { return; }
+		// 全てのボタンを初期化
+		foreach (var btn in m_Btn_Titles) {
+			btn.Init();
+		}
+		// 【スタッフ】を選択済みにしておく
+		SetSelectTitleBtn(GetTitleBtnIdx(m_Btn_ToCredit), false);
 
-		m_Btn_Start.Init();
-		m_Btn_ToCredit.Init();
-
+		AudioManager.PlaySE(ESE.Decide_31, 0);
 		// 
 		SetState(EState.Credit_Close);
 	}
+
+
+	protected void OnEnter(UIBehaviour _ui, PointerEventData _data)
+	{
+		if (IsState(EState.Title_Loop) == false) { return; }
+
+		for (int i = 0; i < m_Btn_Titles.Length; i++) {
+			if (m_Btn_Titles[i] == _ui) {
+				SetSelectTitleBtn(i);
+				break;
+			}
+		}
+	}
+	protected void OnClick(UIBehaviour _ui, PointerEventData _data)
+	{
+		if (IsState(EState.Title_Loop) == false) { return; }
+
+		if (_ui == m_Btn_Start) {
+			Open_StageSelect();
+		}
+		else if (_ui == m_Btn_ToCredit) {
+			Open_Staff();
+		}
+		else {
+		
+		}
+		(_ui as UITitleButton)?.SetDecide(true);
+	}
+	protected void OnClick_BackFromnStageSelect(UIBehaviour _ui, PointerEventData _data)
+	{
+		Close_StageSelect();
+	}
+	protected void OnClick_BackFromnStaff(UIBehaviour _ui, PointerEventData _data)
+	{
+		Close_Staff();
+	}
+
+
+	
 
 	void Awake()
 	{
@@ -164,27 +260,36 @@ public class TitleManager : MonoBehaviour
 	}
 	void Start()
 	{
-		m_CreditSlidTimer = new SimpleTimer();
-		m_CreditSlidTimer.duration = m_CreditAnimDuration;
-		m_CreditSlidTimer.reverse = false;
+		m_StageSelect.Init();
+		m_StageSelect.CloseForce();
+		m_Staff.Init();
+		m_Staff.CloseForce();
 
 		m_PlayerWalkAnim_Timer = new SimpleTimer();
 		m_PlayerWalkAnim_Timer.duration = m_PlayerWalkAnim_Duration;
 
-		m_Credit.anchoredPosition = m_Credit_StartPos;
+		m_Btn_Titles = new UITitleButton[] { m_Btn_Start, m_Btn_ToCredit };
 
 		// コールバック
-		m_Btn_Start.onClick += OnStart;
-		m_Btn_ToCredit.onClick += OnCredit_Open;
-		m_Btn_FromCredit.onClick += OnCredit_Close;
+		foreach (var btn in m_Btn_Titles) {
+			btn.onEnter += OnEnter;
+		}
+		m_Btn_Start.onClick += OnClick;
+		m_Btn_ToCredit.onClick += OnClick;
+		m_StageSelect.btnClose.onClick += OnClick_BackFromnStageSelect;
+		m_Staff.btnClose.onClick += OnClick_BackFromnStaff;
 
+		// BGM流す
 		AudioManager.PlayBGN(EBGM.Title);
+		// 一番目を選択状態にする
+		SetSelectTitleBtn(0, false);
 
 		SetState(EState.Title_Loop);
 	}
 	void Update()
 	{
 		float dt = Time.deltaTime;
+		Keyboard kb = Keyboard.current;
 
 		m_PlayerWalkAnim_Timer.Run(dt);
 		m_Player.localRotation = Quaternion.Lerp(Quaternion.Euler(m_PlayerWalk_Euler_In), Quaternion.Euler(m_PlayerWalk_Euler_Out), m_PlayerWalkAnim_Timer.progress);
@@ -193,33 +298,73 @@ public class TitleManager : MonoBehaviour
 		}
 
 		switch (m_State) {
+			// --------------------
+			//  タイトル
+			// --------------------
 			case EState.Title_Loop:
-				break;
-
-			case EState.Credit_Open: {
-				m_CreditSlidTimer.Run(dt);
-				float rate = m_CreditAnimCurve.Evaluate(m_CreditSlidTimer.progress);
-				Vector2 pos = m_Credit.anchoredPosition;
-				m_Credit.anchoredPosition = Vector2.Lerp(pos, Vector2.zero, rate);
-				if (m_CreditSlidTimer.IsElapsed() == true) {
-					SetState(EState.Credit_Loop);
+				// キーボード操作も可能
+				int idx = m_CurrentSelectedTitleBtnIdx;
+				if (kb.wKey.wasPressedThisFrame == true) {
+					// ↑
+					idx--;
+					if (idx < 0) { idx = m_Btn_Titles.Length - 1; }
+					SetSelectTitleBtn(idx);
 				}
-			} break;
-
-			case EState.Credit_Loop:
-
+				else if (kb.sKey.wasPressedThisFrame == true) {
+					// ↓
+					idx++;
+					if (idx >= m_Btn_Titles.Length) { idx = 0; }
+					SetSelectTitleBtn(idx);
+				}
+				else if (kb.spaceKey.wasPressedThisFrame == true) {
+					// 決定
+					OnClick(m_Btn_Titles[m_CurrentSelectedTitleBtnIdx], null);
+				}
 				break;
 
-			case EState.Credit_Close: {
-				m_CreditSlidTimer.Run(dt);
-				float rate = m_CreditAnimCurve.Evaluate(m_CreditSlidTimer.progress);
-				Vector2 pos = m_Credit.anchoredPosition;
-				m_Credit.anchoredPosition = Vector2.Lerp(m_Credit_StartPos, pos, rate);
-				if (m_CreditSlidTimer.IsElapsed() == true) {
+			// --------------------
+			//  ステージセレクト
+			// --------------------
+			case EState.StageSelect_Open:
+				if (m_StageSelect.isViewAnim == false) {
+					SetState(EState.StageSelect_Loop);
+				}
+				break;
+			case EState.StageSelect_Loop:
+				if (kb.backspaceKey.wasPressedThisFrame == true) {
+					Close_StageSelect();
+				}
+				break;
+			case EState.StageSelect_Close:
+				if (m_StageSelect.isViewAnim == false) {
 					SetState(EState.Title_Loop);
 				}
-			} break;
+				break;
 
+			// --------------------
+			//  スタッフ
+			// --------------------
+			case EState.Credit_Open:
+				if (m_Staff.isViewAnim == false) {
+					SetState(EState.Credit_Loop);
+				}
+				break;
+
+			case EState.Credit_Loop:
+				if (kb.backspaceKey.wasPressedThisFrame == true) {
+					Close_Staff();
+				}
+				break;
+
+			case EState.Credit_Close:
+				if (m_Staff.isViewAnim == false) {
+					SetState(EState.Title_Loop);
+				}
+				break;
+
+			// --------------------
+			//  メインゲームへ
+			// --------------------
 			case EState.ToMain:
 
 				break;
