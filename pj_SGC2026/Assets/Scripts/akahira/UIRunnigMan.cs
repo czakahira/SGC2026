@@ -36,6 +36,26 @@ public class UIRunnigMan : UIComponent
 	[SerializeField] protected Vector3 m_Start_Euler;
 	[SerializeField] protected Vector3 m_Goal_Euler;
 
+
+	protected void UpdateAnim_Way(float _dt)
+	{
+		m_WayPassTimer.Run(_dt);
+		this.rectTransform.anchoredPosition = Vector2.Lerp(
+			m_StartWayData.target.anchoredPosition,
+			m_GoalWayData.target.anchoredPosition,
+			m_WayPassTimer.progress
+		);
+		if (m_WayPassTimer.IsElapsed() == true) {
+			SetWayIdx(++m_StartWayIdx);
+		}
+	}
+
+	public void Init()
+	{
+		SetWayIdx(1);
+		UpdateAnim_Way(0f);
+	}
+
 	protected override void Awake()
 	{
 		base.Awake();
@@ -54,7 +74,6 @@ public class UIRunnigMan : UIComponent
 		m_SwayTimer.reverse = false;
 		m_SwayTimer.duration = m_SwayDuration;
 
-		SetWayIdx(0);
 	}
 	protected override void EachUpdate(float _dt)
 	{
@@ -66,15 +85,7 @@ public class UIRunnigMan : UIComponent
 		this.rectTransform.localRotation = Quaternion.Lerp(m_StartWayData.target.localRotation, m_GoalWayData.target.localRotation, m_RotateTimer.progress);
 
 		// 走る
-		m_WayPassTimer.Run(_dt);
-		this.rectTransform.anchoredPosition = Vector2.Lerp(
-			m_StartWayData.target.anchoredPosition,
-			m_GoalWayData.target.anchoredPosition,
-			m_WayPassTimer.progress
-		);
-		if (m_WayPassTimer.IsElapsed() == true) {
-			SetWayIdx(++m_StartWayIdx);
-		}
+		UpdateAnim_Way(_dt);
 
 		// ゆらゆら
 		m_SwayTimer.Run(_dt);
@@ -95,7 +106,6 @@ public class UIRunnigMan : UIComponent
 
 		m_WayPassTimer.duration = m_StartWayData.duration;
 		m_WayPassTimer.Reset();
-
 
 		m_RotateTimer.Reset();
 	}

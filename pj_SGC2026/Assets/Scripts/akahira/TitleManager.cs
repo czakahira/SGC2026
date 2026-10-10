@@ -17,6 +17,7 @@ public class TitleManager : MonoBehaviour
 		/// <summary>
 		/// 選択待ち
 		/// </summary>
+		Title_Open,
 		Title_Loop,
 
 		/// <summary>
@@ -222,7 +223,9 @@ public class TitleManager : MonoBehaviour
 
 		for (int i = 0; i < m_Btn_Titles.Length; i++) {
 			if (m_Btn_Titles[i] == _ui) {
-				SetSelectTitleBtn(i);
+				if (m_CurrentSelectedTitleBtnIdx != i) {
+					SetSelectTitleBtn(i);
+				}
 				break;
 			}
 		}
@@ -279,12 +282,12 @@ public class TitleManager : MonoBehaviour
 		m_StageSelect.btnClose.onClick += OnClick_BackFromnStageSelect;
 		m_Staff.btnClose.onClick += OnClick_BackFromnStaff;
 
-		// BGM流す
-		AudioManager.PlayBGN(EBGM.Title);
 		// 一番目を選択状態にする
 		SetSelectTitleBtn(0, false);
 
-		SetState(EState.Title_Loop);
+		m_RunnnigMan.Init();
+
+		SetState(EState.Title_Open);
 	}
 	void Update()
 	{
@@ -301,6 +304,13 @@ public class TitleManager : MonoBehaviour
 			// --------------------
 			//  タイトル
 			// --------------------
+			case EState.Title_Open:
+
+				// BGM流す
+				AudioManager.PlayBGN(EBGM.Title);
+
+				SetState(EState.Title_Loop);
+				break;
 			case EState.Title_Loop:
 				// キーボード操作も可能
 				int idx = m_CurrentSelectedTitleBtnIdx;
@@ -320,6 +330,14 @@ public class TitleManager : MonoBehaviour
 					// 決定
 					OnClick(m_Btn_Titles[m_CurrentSelectedTitleBtnIdx], null);
 				}
+
+				if (kb.enterKey.wasPressedThisFrame == true) {
+					UIManager.LoadStart();
+				}
+				if (kb.endKey.wasPressedThisFrame == true) {
+					UIManager.LoadEnd();
+				}
+
 				break;
 
 			// --------------------

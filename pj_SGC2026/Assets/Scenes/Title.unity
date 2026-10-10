@@ -2878,7 +2878,7 @@ MonoBehaviour:
   m_Btn_ToCredit: {fileID: 73415473}
   m_StageSelect: {fileID: 683430707}
   m_Staff: {fileID: 1327414753}
-  m_RunnnigMan: {fileID: 1811771535}
+  m_RunnnigMan: {fileID: 1811771536}
   m_PlayerWalkAnim_Duration: 0.7
   m_PlayerWalk_Euler_In: {x: 0, y: 0, z: 50}
   m_PlayerWalk_Euler_Out: {x: 0, y: 0, z: -30}

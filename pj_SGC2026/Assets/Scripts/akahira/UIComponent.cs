@@ -37,6 +37,11 @@ public class UIComponent : UIBehaviour
 		set { canvasGroup.interactable = value; }
 	}
 
+	public void SetVisible(bool _value)
+	{
+		canvasGroup.alpha = _value == true ? 1f : 0f;
+	}
+
 	protected override void Awake()
 	{
 		base.Awake();
