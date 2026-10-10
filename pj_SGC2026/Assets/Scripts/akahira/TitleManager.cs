@@ -64,7 +64,7 @@ public class TitleManager : MonoBehaviour
 	/// <summary>
 	/// ニンゲン
 	/// </summary>
-	[SerializeField] protected RectTransform m_Player;
+	[SerializeField] protected UIRunnigMan m_RunnnigMan;
 
 	[SerializeField] protected float m_PlayerWalkAnim_Duration;
 	protected SimpleTimer m_PlayerWalkAnim_Timer;
@@ -292,7 +292,7 @@ public class TitleManager : MonoBehaviour
 		Keyboard kb = Keyboard.current;
 
 		m_PlayerWalkAnim_Timer.Run(dt);
-		m_Player.localRotation = Quaternion.Lerp(Quaternion.Euler(m_PlayerWalk_Euler_In), Quaternion.Euler(m_PlayerWalk_Euler_Out), m_PlayerWalkAnim_Timer.progress);
+		//m_RunnnigMan.localRotation = Quaternion.Lerp(Quaternion.Euler(m_PlayerWalk_Euler_In), Quaternion.Euler(m_PlayerWalk_Euler_Out), m_PlayerWalkAnim_Timer.progress);
 		if (m_PlayerWalkAnim_Timer.IsElapsed() == true) {
 			m_PlayerWalkAnim_Timer.reverse = m_PlayerWalkAnim_Timer.reverse == false;
 		}
