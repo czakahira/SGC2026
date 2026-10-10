@@ -41,6 +41,11 @@ public class UIComponent : UIBehaviour
 	{
 		canvasGroup.alpha = _value == true ? 1f : 0f;
 	}
+	public void SetInteract(bool _value)
+	{
+		blockRaycasts = _value;
+		interactable = _value;
+	}
 
 	protected override void Awake()
 	{

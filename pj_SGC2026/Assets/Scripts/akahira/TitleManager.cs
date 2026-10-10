@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using NUnit.Framework.Internal.Filters;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// シーン：タイトル
@@ -125,7 +126,7 @@ public class TitleManager : MonoBehaviour
 				break;
 
 			case EState.ToMain:
-
+				GameSceneUtility.LoadSceneAsync("Main").Forget();
 				break;
 
 			case EState.None:
@@ -330,14 +331,6 @@ public class TitleManager : MonoBehaviour
 					// 決定
 					OnClick(m_Btn_Titles[m_CurrentSelectedTitleBtnIdx], null);
 				}
-
-				if (kb.enterKey.wasPressedThisFrame == true) {
-					UIManager.LoadStart();
-				}
-				if (kb.endKey.wasPressedThisFrame == true) {
-					UIManager.LoadEnd();
-				}
-
 				break;
 
 			// --------------------
@@ -351,6 +344,9 @@ public class TitleManager : MonoBehaviour
 			case EState.StageSelect_Loop:
 				if (kb.backspaceKey.wasPressedThisFrame == true) {
 					Close_StageSelect();
+				}
+				if (kb.spaceKey.wasPressedThisFrame == true) {
+					SetState(EState.ToMain);
 				}
 				break;
 			case EState.StageSelect_Close:

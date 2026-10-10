@@ -1,4 +1,5 @@
 
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,11 +10,22 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class GameManager : SingletonBehaviour<GameManager>
 {
+
+	protected CancellationTokenSource m_ApplicationQuitToken;
+
 	/// <summary>
 	/// デリゲート：更新
 	/// </summary>
 	public event UnityAction<float> onUpdate;
 
+	public CancellationToken quitToken => m_ApplicationQuitToken.Token;
+
+	protected override void Init()
+	{
+		base.Init();
+
+		m_ApplicationQuitToken = new CancellationTokenSource();
+	}
 	protected void Update()
 	{
 
@@ -30,6 +42,14 @@ public class GameManager : SingletonBehaviour<GameManager>
 #endif
 
 		}
+	}
+	private void OnDestroy()
+	{
+		m_ApplicationQuitToken.Cancel();
+		m_ApplicationQuitToken.Dispose();
+		m_ApplicationQuitToken = null;
+
+
 	}
 
 }

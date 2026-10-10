@@ -278,7 +278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   m_EventSystem: {fileID: 159827751}
-  m_Fader: {fileID: 1574410563}
+  m_Fader: {fileID: 1574410567}
   m_Loading: {fileID: 1544733273}
 --- !u!4 &98833638
 Transform:
@@ -1838,13 +1838,14 @@ GameObject:
   - component: {fileID: 1574410565}
   - component: {fileID: 1574410564}
   - component: {fileID: 1574410563}
+  - component: {fileID: 1574410567}
   m_Layer: 5
   m_Name: Fader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!225 &1574410563
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1914,6 +1915,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1574410567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574410562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75ebe76db6944d41b53134690fffe22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIFader
 --- !u!1 &1630479718
 GameObject:
   m_ObjectHideFlags: 0

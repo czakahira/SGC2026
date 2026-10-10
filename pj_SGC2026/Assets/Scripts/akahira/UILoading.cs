@@ -50,6 +50,7 @@ public class UILoading : UIComponent
 			case EState.RunBorder_Horizontal:
 				if (m_Reverse == true) {
 					SetVisible(false);
+					SetInteract(false);
 				}
 				break;
 			case EState.RunBorder_Vertical:
@@ -121,6 +122,7 @@ public class UILoading : UIComponent
 	public void Open()
 	{
 		SetVisible(true);
+		SetInteract(true);
 		m_Reverse = false;
 		m_Timer.reverse = m_Reverse;
 		m_Bar.SetSizeWithCurrentAnchors(new Vector2(m_Size_Horizontal.x, m_Size_Vertical.x));
@@ -129,6 +131,7 @@ public class UILoading : UIComponent
 	public void Close()
 	{
 		SetVisible(true);
+		SetInteract(true);
 		m_Reverse = true;
 		m_Timer.reverse = m_Reverse;
 		m_Bar.SetSizeWithCurrentAnchors(new Vector2(m_Size_Horizontal.y, m_Size_Vertical.y));
