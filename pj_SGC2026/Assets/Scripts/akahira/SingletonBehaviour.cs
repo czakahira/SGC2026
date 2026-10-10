@@ -35,14 +35,16 @@ public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 		if (s_Instance == null) {
 
 			s_Instance = GameObject.FindAnyObjectByType<T>();
+			string name = typeof(T).Name;
+			GameObject obj = GameObject.Find(name);
 			if (s_Instance == null) {
-				string name = typeof(T).Name;
-				GameObject obj = GameObject.Find(name);
 				if (obj == null) {
 					obj = new GameObject(name);
 					s_Instance = obj.AddComponent<T>();
 				}
 			}
+			// 名前変更
+			obj.name = name;
 			// 常駐
 			DontDestroyOnLoad(s_Instance.gameObject);
 			// 初期化

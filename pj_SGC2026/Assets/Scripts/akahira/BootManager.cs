@@ -12,6 +12,7 @@ public class BootManager : MonoBehaviour
 		isBoot &= GameManager.isActive == true;
 		isBoot &= GameSceneManager.isActive == true;
 		isBoot &= UIManager.isActive == true;
+		isBoot &= AudioManager.isActive == true;
 
 		// 準備完了したらタイトルへ
 		if (isBoot == true) {
