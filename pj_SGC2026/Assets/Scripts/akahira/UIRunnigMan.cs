@@ -36,6 +36,11 @@ public class UIRunnigMan : UIComponent
 	[SerializeField] protected Vector3 m_Start_Euler;
 	[SerializeField] protected Vector3 m_Goal_Euler;
 
+	/// <summary>
+	/// 
+	/// </summary>
+	[SerializeField] protected UIFlipAnim m_Flip;
+
 
 	protected void UpdateAnim_Way(float _dt)
 	{
@@ -54,6 +59,8 @@ public class UIRunnigMan : UIComponent
 	{
 		SetWayIdx(1);
 		UpdateAnim_Way(0f);
+
+		m_Flip.Init();
 	}
 
 	protected override void Awake()
@@ -93,6 +100,8 @@ public class UIRunnigMan : UIComponent
 		if (m_SwayTimer.IsElapsed() == true) {
 			m_SwayTimer.reverse = m_SwayTimer.reverse == false;
 		}
+
+		m_Flip.UpdateAnim(_dt);
 
 	}
 

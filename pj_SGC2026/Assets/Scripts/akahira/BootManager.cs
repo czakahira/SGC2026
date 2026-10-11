@@ -1,12 +1,15 @@
 
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// シーン：起動
 /// </summary>
 public class BootManager : MonoBehaviour
 {
-	void Awake()
+
+	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+	public static void Boot()
 	{
 		bool isBoot = true;
 		isBoot &= GameManager.isActive == true;
@@ -16,7 +19,8 @@ public class BootManager : MonoBehaviour
 
 		// 準備完了したらタイトルへ
 		if (isBoot == true) {
-			GameSceneManager.instance.Load("Title");
+//			GameSceneManager.instance.Load("Title");
+			GameSceneUtility.LoadSceneAsyncOnFade("Title").Forget();
 		}
 
 	}

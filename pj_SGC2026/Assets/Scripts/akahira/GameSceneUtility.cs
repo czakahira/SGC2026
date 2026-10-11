@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class GameSceneUtility
 {
 
-	public async static UniTask LoadSceneAsync(string _sceneName, UnityAction<Scene> _onLoad = null, LoadSceneMode _loadSceneMode = LoadSceneMode.Single)
+	public async static UniTask LoadSceneAsyncOnLoading(string _sceneName, UnityAction<Scene> _onLoad = null, LoadSceneMode _loadSceneMode = LoadSceneMode.Single)
 	{
 		CancellationToken token = GameManager.instance.quitToken;
 
@@ -25,6 +25,25 @@ public class GameSceneUtility
 			await UniTask.Yield(PlayerLoopTiming.Update, token);
 		}
 		// コールバック
+		_onLoad?.Invoke(SceneManager.GetSceneByName(_sceneName));
+	}
+
+	public async static UniTask LoadSceneAsyncOnFade(string _sceneName, UnityAction<Scene> _onLoad = null, LoadSceneMode _loadSceneMode = LoadSceneMode.Single)
+	{
+		CancellationToken token = GameManager.instance.quitToken;
+
+		UIManager.FadeOut();
+		while (UIManager.instance.fader.isFade == true) {
+			await UniTask.Yield(PlayerLoopTiming.Update, token);
+		}
+
+		await GameSceneManager.instance.LoadAsync(_sceneName, _loadSceneMode);
+
+		UIManager.FadeIn();
+		while (UIManager.instance.fader.isFade == true) {
+			await UniTask.Yield(PlayerLoopTiming.Update, token);
+		}
+
 		_onLoad?.Invoke(SceneManager.GetSceneByName(_sceneName));
 	}
 

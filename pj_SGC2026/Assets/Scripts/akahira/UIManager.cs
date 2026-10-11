@@ -25,6 +25,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 	[SerializeField] protected UILoading m_Loading;
 
 
+	public UIFader fader => m_Fader;
 	public UILoading loading => m_Loading;
 
 	public event UnityAction<float> onUpdate;
@@ -61,5 +62,16 @@ public class UIManager : SingletonBehaviour<UIManager>
 	{
 		instance.m_Loading.Close();
 	}
+
+
+	public static void FadeOut(float _duration = 0.5f)
+	{
+		instance.fader.FadeOut(_duration);
+	}
+	public static void FadeIn(float _duration = 0.5f)
+	{
+		instance.fader.FadeIn(_duration);
+	}
+
 
 }

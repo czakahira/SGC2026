@@ -66,19 +66,21 @@ public class UITitleSubWindow : UIComponent
 		this.rectTransform.anchoredPosition = Vector2.Lerp(m_ClosePosition, Vector2.zero, _progress);
 	}
 
-	public virtual void Open()
+	public virtual bool Open()
 	{
 		m_ViewAnimTimer.reverse = false;
 		m_IsViewAnim = true;
+		return true;
 	}
 	public virtual void OpenForce()
 	{
 		UpdateViewAnim(1f);
 	}
-	public virtual void Close()
+	public virtual bool Close()
 	{
 		m_ViewAnimTimer.reverse = true;
 		m_IsViewAnim = true;
+		return true;
 	}
 	public virtual void CloseForce()
 	{

@@ -38,7 +38,7 @@ public class UITitleButton : UIButton
 	/// <summary>
 	/// 文字テククチャ
 	/// </summary>
-	[SerializeField] protected Image m_Text;
+	[SerializeField] protected Image[] m_Texts;
 	/// <summary>
 	/// 
 	/// </summary>
@@ -60,6 +60,16 @@ public class UITitleButton : UIButton
 	[SerializeField] protected EState m_State;
 
 	
+	/// <summary>
+	/// 文字テクスチャの色を一括で変更
+	/// </summary>
+	/// <param name="_color"></param>
+	protected void SetTextColor(Color _color)
+	{
+		foreach (var txt in m_Texts) {
+			txt.color = _color;
+		}
+	}
 
 	protected void AddState(EState _state)
 	{
@@ -71,7 +81,7 @@ public class UITitleButton : UIButton
 			if (_state.HasFlag(EState.Decide) == true) {
 				m_Triangle_Alpha.alpha = 0f;
 				m_Circle_Yellow_Alpha.alpha = 1f;
-				m_Text.color = m_TextColor_Decide;
+				SetTextColor(m_TextColor_Decide);
 			}
 			if (_state.HasFlag(EState.Decided) == true) {
 
@@ -122,7 +132,7 @@ public class UITitleButton : UIButton
 		// 黄色い楕円
 		m_Circle_Yellow_Alpha.alpha = 0f;
 		// テキストの色
-		m_Text.color = m_TextColor_Wait;
+		SetTextColor(m_TextColor_Wait);
 		// タイマ－
 		m_SelectAnim_Timer.Reset();
 		m_SelectAnim_Timer.reverse = true;

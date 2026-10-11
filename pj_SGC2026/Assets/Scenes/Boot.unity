@@ -1927,6 +1927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b75ebe76db6944d41b53134690fffe22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIFader
+  m_Image: {fileID: 1574410564}
 --- !u!1 &1630479718
 GameObject:
   m_ObjectHideFlags: 0

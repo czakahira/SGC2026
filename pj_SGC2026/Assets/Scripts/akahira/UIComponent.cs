@@ -27,6 +27,11 @@ public class UIComponent : UIBehaviour
 			return m_CanvasGroup;
 		}
 	}
+	public float alpha
+	{
+		get { return canvasGroup.alpha; }
+		set { canvasGroup.alpha = value; }
+	}
 	public bool blockRaycasts
 	{
 		get { return canvasGroup.blocksRaycasts; }
@@ -39,7 +44,7 @@ public class UIComponent : UIBehaviour
 
 	public void SetVisible(bool _value)
 	{
-		canvasGroup.alpha = _value == true ? 1f : 0f;
+		alpha = _value == true ? 1f : 0f;
 	}
 	public void SetInteract(bool _value)
 	{
@@ -56,6 +61,10 @@ public class UIComponent : UIBehaviour
 	protected virtual void EachUpdate(float _dt)
 	{
 
+	}
+	protected override void OnDestroy()
+	{
+		UIManager.instance.onUpdate -= EachUpdate;
 	}
 
 }

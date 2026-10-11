@@ -36,6 +36,13 @@ public class TitleManager : MonoBehaviour
 		Credit_Close,
 
 		/// <summary>
+		/// 遊び方
+		/// </summary>
+		HowTo_Open,
+		HowTo_Loop,
+		HowTo_Close,
+
+		/// <summary>
 		/// 本ゲームへ
 		/// </summary>
 		ToMain,
@@ -52,7 +59,11 @@ public class TitleManager : MonoBehaviour
 	/// <summary>
 	/// ボタン：クレジット
 	/// </summary>
-	[SerializeField] protected UITitleButton m_Btn_ToCredit;
+	[SerializeField] protected UITitleButton m_Btn_Staff;
+	/// <summary>
+	/// ボタン：遊び方
+	/// </summary>
+	[SerializeField] protected UITitleButton m_Btn_HowTo;
 
 	/// <summary>
 	/// UI：ステージセレクト
@@ -62,6 +73,10 @@ public class TitleManager : MonoBehaviour
 	/// UI：スタッフ
 	/// </summary>
 	[SerializeField] protected UITitleStaffWIndow m_Staff;
+	/// <summary>
+	/// UI：遊び方
+	/// </summary>
+	[SerializeField] protected UITitleSubWindow m_HowTo;
 
 	/// <summary>
 	/// ニンゲン
@@ -125,8 +140,20 @@ public class TitleManager : MonoBehaviour
 				m_Staff.Close();
 				break;
 
+			case EState.HowTo_Open:
+				m_HowTo.btnClose.blockRaycasts = true;
+				m_HowTo.btnClose.interactable = true;
+				m_HowTo.Open();
+				break;
+			case EState.HowTo_Loop:
+				break;
+			case EState.HowTo_Close:
+				m_HowTo.btnClose.blockRaycasts = false;
+				m_HowTo.btnClose.interactable = false;
+				m_HowTo.Close();
+				break;
+
 			case EState.ToMain:
-				GameSceneUtility.LoadSceneAsync("Main").Forget();
 				break;
 
 			case EState.None:
@@ -210,11 +237,36 @@ public class TitleManager : MonoBehaviour
 			btn.Init();
 		}
 		// 【スタッフ】を選択済みにしておく
-		SetSelectTitleBtn(GetTitleBtnIdx(m_Btn_ToCredit), false);
+		SetSelectTitleBtn(GetTitleBtnIdx(m_Btn_Staff), false);
 
 		AudioManager.PlaySE(ESE.Decide_31, 0);
 		// 
 		SetState(EState.Credit_Close);
+	}
+	/// <summary>
+	/// 遊び方：開く
+	/// </summary>
+	protected void Open_HowTo()
+	{
+		AudioManager.PlaySE(ESE.Decide_31, 0);
+		// クレジットを開く
+		SetState(EState.HowTo_Open);
+	}
+	/// <summary>
+	/// 遊び方：閉じる
+	/// </summary>
+	protected void Close_HowTo()
+	{
+		// 全てのボタンを初期化
+		foreach (var btn in m_Btn_Titles) {
+			btn.Init();
+		}
+		// 【スタッフ】を選択済みにしておく
+		SetSelectTitleBtn(GetTitleBtnIdx(m_Btn_HowTo), false);
+
+		AudioManager.PlaySE(ESE.Decide_31, 0);
+		// 
+		SetState(EState.HowTo_Close);
 	}
 
 
@@ -238,8 +290,11 @@ public class TitleManager : MonoBehaviour
 		if (_ui == m_Btn_Start) {
 			Open_StageSelect();
 		}
-		else if (_ui == m_Btn_ToCredit) {
+		else if (_ui == m_Btn_Staff) {
 			Open_Staff();
+		}
+		else if (_ui == m_Btn_HowTo) {
+			Open_HowTo();
 		}
 		else {
 		
@@ -254,9 +309,13 @@ public class TitleManager : MonoBehaviour
 	{
 		Close_Staff();
 	}
+	protected void OnClick_BackFromnHowTo(UIBehaviour _ui, PointerEventData _data)
+	{
+		Close_HowTo();
+	}
 
 
-	
+
 
 	void Awake()
 	{
@@ -268,20 +327,24 @@ public class TitleManager : MonoBehaviour
 		m_StageSelect.CloseForce();
 		m_Staff.Init();
 		m_Staff.CloseForce();
+		m_HowTo.Init();
+		m_HowTo.CloseForce();
 
 		m_PlayerWalkAnim_Timer = new SimpleTimer();
 		m_PlayerWalkAnim_Timer.duration = m_PlayerWalkAnim_Duration;
 
-		m_Btn_Titles = new UITitleButton[] { m_Btn_Start, m_Btn_ToCredit };
+		m_Btn_Titles = new UITitleButton[] { m_Btn_Start, m_Btn_Staff, m_Btn_HowTo };
 
 		// コールバック
 		foreach (var btn in m_Btn_Titles) {
 			btn.onEnter += OnEnter;
 		}
 		m_Btn_Start.onClick += OnClick;
-		m_Btn_ToCredit.onClick += OnClick;
+		m_Btn_Staff.onClick += OnClick;
+		m_Btn_HowTo.onClick += OnClick;
 		m_StageSelect.btnClose.onClick += OnClick_BackFromnStageSelect;
 		m_Staff.btnClose.onClick += OnClick_BackFromnStaff;
+		
 
 		// 一番目を選択状態にする
 		SetSelectTitleBtn(0, false);
@@ -342,11 +405,15 @@ public class TitleManager : MonoBehaviour
 				}
 				break;
 			case EState.StageSelect_Loop:
+				if (m_StageSelect.IsDecide() == true) {
+					// シーン遷移
+					GameSceneUtility.LoadSceneAsyncOnLoading("Main").Forget();
+					//
+					SetState(EState.ToMain);
+					break;
+				}
 				if (kb.backspaceKey.wasPressedThisFrame == true) {
 					Close_StageSelect();
-				}
-				if (kb.spaceKey.wasPressedThisFrame == true) {
-					SetState(EState.ToMain);
 				}
 				break;
 			case EState.StageSelect_Close:
@@ -372,6 +439,27 @@ public class TitleManager : MonoBehaviour
 
 			case EState.Credit_Close:
 				if (m_Staff.isViewAnim == false) {
+					SetState(EState.Title_Loop);
+				}
+				break;
+
+			// --------------------
+			//  遊び方
+			// --------------------
+			case EState.HowTo_Open:
+				if (m_HowTo.isViewAnim == false) {
+					SetState(EState.HowTo_Loop);
+				}
+				break;
+
+			case EState.HowTo_Loop:
+				if (kb.backspaceKey.wasPressedThisFrame == true) {
+					Close_HowTo();
+				}
+				break;
+
+			case EState.HowTo_Close:
+				if (m_HowTo.isViewAnim == false) {
 					SetState(EState.Title_Loop);
 				}
 				break;
