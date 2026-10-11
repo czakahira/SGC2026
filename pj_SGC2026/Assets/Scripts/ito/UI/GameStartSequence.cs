@@ -29,9 +29,9 @@ public class GameStartSequence : MonoBehaviour
 			return;
 		}
 
-		// ★ カウントダウン中のカメラ位置を固定 (10,5)
+		// ★ カウントダウン中のカメラ位置を固定 
 		Vector3 camPos = new Vector3(
-			-5.5f,                       
+			-15.5f,                       
 			5f,                        // Y = 5
 			_cameraFollow.transform.position.z // Z はそのまま
 		);
@@ -45,7 +45,7 @@ public class GameStartSequence : MonoBehaviour
 	private IEnumerator Start()
 	{
 		// プレイヤー初期位置セット
-		Vector3 offscreenPos = _entryPoint.position + new Vector3(-17.5f, 0f, 0f);
+		Vector3 offscreenPos = _entryPoint.position + new Vector3(-17.5f, 3f, 0f);
 		_player.transform.position = offscreenPos;
 
 		// プレイヤー移動開始
