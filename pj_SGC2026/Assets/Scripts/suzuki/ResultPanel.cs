@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ResultPanel : MonoBehaviour
 {
@@ -13,6 +15,19 @@ public class ResultPanel : MonoBehaviour
 	[Header("アニメーション")]
 	public ResultPanelAnimator animator;
 
+	public Button titleButton;
+	private void Start()
+	{
+		// タイトルに戻るボタン
+		titleButton.onClick.AddListener(() =>
+		{
+			// スコアリセット
+			ScoreManager.instance.ResetScore();
+
+			// タイトルへ戻る
+			SceneManager.LoadScene("Title");
+		});
+	}
 	private void OnEnable()
 	{
 		// アニメーション開始

@@ -12,6 +12,8 @@ public class PlayerLife : MonoBehaviour
 	public PlayerRespawn playerRespawn;
 	[Header("カメラ追従スクリプト")]
 	public CameraFollow cameraFollow;
+	[Header("ScoreImageView")]
+	public ScoreImageView scoreImageView;
 	private void Awake()
 	{
 		if (instance == null)
@@ -49,8 +51,8 @@ public class PlayerLife : MonoBehaviour
 		{
 			playerRespawn.enabled = false;
 		}
-
 		// ★ゲームオーバー表示
+		scoreImageView.UpdateScore(ScoreManager.instance.score);
 		resultPanel.ShowGameOver();
 	}
 }
