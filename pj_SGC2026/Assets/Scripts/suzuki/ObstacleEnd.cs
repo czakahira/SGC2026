@@ -3,7 +3,7 @@ using UnityEngine;
 public class ColorObstacleEnd : MonoBehaviour
 {
 	public ColorType obstacleColor;
-
+	public GameObject scoreEffectPrefab;
 	private void OnTriggerEnter(Collider other)
 	{
 		var player = other.GetComponent<PlayerColor>();
@@ -14,6 +14,7 @@ public class ColorObstacleEnd : MonoBehaviour
 		{
 			ScoreManager.instance.AddScore(100);
 			Debug.Log("壁通過 +100");
+			Instantiate(scoreEffectPrefab, transform.position, Quaternion.identity);
 		}
 	}
 }
