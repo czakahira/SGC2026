@@ -17,10 +17,18 @@ public class UIManager : SingletonBehaviour<UIManager>
 	/// <summary>
 	/// フェーダー
 	/// </summary>
-	[SerializeField] protected CanvasGroup m_Fader;
+	[SerializeField] protected UIFader m_Fader;
 
+	/// <summary>
+	/// UI：ロード中
+	/// </summary>
+	[SerializeField] protected UILoading m_Loading;
+
+
+	public UILoading loading => m_Loading;
 
 	public event UnityAction<float> onUpdate;
+
 
 
 	protected override void Init()
@@ -32,11 +40,26 @@ public class UIManager : SingletonBehaviour<UIManager>
 		}
 
 		GameManager.instance.onUpdate += OnUpdate;
+
+		m_Fader.SetVisible(false);
+		m_Fader.SetInteract(false);
+		m_Loading.SetVisible(false);
+		m_Loading.SetInteract(false);
 	}
 
 	protected void OnUpdate(float _dt)
 	{
 		onUpdate?.Invoke(_dt);
+	}
+
+
+	public static void LoadStart()
+	{
+		instance.m_Loading.Open();
+	}
+	public static void LoadEnd()
+	{
+		instance.m_Loading.Close();
 	}
 
 }
