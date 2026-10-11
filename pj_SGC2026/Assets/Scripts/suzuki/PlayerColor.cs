@@ -5,6 +5,8 @@ public class PlayerColor : MonoBehaviour
 	public static PlayerColor instance;
 
 	public ColorType currentColor = ColorType.Default;
+
+	// ★ SkinnedMeshRenderer 1つを参照する
 	public Renderer playerRenderer;
 
 	private void Awake()
@@ -16,20 +18,36 @@ public class PlayerColor : MonoBehaviour
 	{
 		currentColor = newColor;
 
+		Color targetColor = Color.white;
+
 		switch (newColor)
 		{
 			case ColorType.Default:
-				playerRenderer.material.color = Color.white;
+				targetColor = Color.white;
 				break;
 			case ColorType.Red:
-				playerRenderer.material.color = Color.red;
+				targetColor = Color.red;
 				break;
 			case ColorType.Blue:
-				playerRenderer.material.color = Color.blue;
+				targetColor = Color.blue;
 				break;
 			case ColorType.Green:
-				playerRenderer.material.color = Color.green;
+				targetColor = Color.green;
 				break;
+		}
+
+		// ★ マテリアルが複数あるので全部変更する
+		foreach (var mat in playerRenderer.materials)
+		{
+			// URP Lit シェーダー対応
+			if (mat.HasProperty("_BaseColor"))
+			{
+				mat.SetColor("_BaseColor", targetColor);
+			}
+			else
+			{
+				mat.color = targetColor;
+			}
 		}
 	}
 }

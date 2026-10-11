@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColorObstacles
   obstacleColor: 2
-  obstacleCol: {fileID: 0}
+  obstacleCol: {fileID: 4340608604209161948}
 --- !u!1 &5314607921651807798
 GameObject:
   m_ObjectHideFlags: 0
