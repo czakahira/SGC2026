@@ -7,9 +7,10 @@ public class GameStartSequence : MonoBehaviour
     [SerializeField] private GameObject _player;
     [SerializeField] private Transform _entryPoint;
     [SerializeField] private CameraFollow _cameraFollow;
-    [SerializeField] private Image _countdownImage;
+	[SerializeField] private Image _countdownImage;
+	[SerializeField] private Image _startImage;
 
-    [SerializeField] private Sprite _three;
+	[SerializeField] private Sprite _three;
     [SerializeField] private Sprite _two;
     [SerializeField] private Sprite _one;
     [SerializeField] private Sprite _start;
@@ -18,33 +19,41 @@ public class GameStartSequence : MonoBehaviour
     [SerializeField] private float _startSeconds = 0.8f;
     [SerializeField] private float _entranceSeconds = 1.2f;
 
-    private void Awake()
-    {
-        if (_player == null || _entryPoint == null ||
-            _cameraFollow == null || _countdownImage == null)
-        {
-            Debug.LogError("GameStartSequence の参照が不足しています。", this);
-            enabled = false;
-            return;
-        }
+	private void Awake()
+	{
+		if (_player == null || _entryPoint == null ||
+			_cameraFollow == null || _countdownImage == null)
+		{
+			Debug.LogError("GameStartSequence の参照が不足しています。", this);
+			enabled = false;
+			return;
+		}
 
-        //_player.SetActive(false);
-        _cameraFollow.enabled = false;
-        _countdownImage.gameObject.SetActive(false);
-    }
+		// ★ カウントダウン中のカメラ位置を固定 
+		Vector3 camPos = new Vector3(
+			-15.5f,                       
+			5f,                        // Y = 5
+			_cameraFollow.transform.position.z // Z はそのまま
+		);
+
+		_cameraFollow.transform.position = camPos;
+
+		_cameraFollow.enabled = false;
+		_countdownImage.gameObject.SetActive(false);
+	}
 
 	private IEnumerator Start()
 	{
-		// ★ プレイヤーを画面外に配置（左に 5m）
-		Vector3 offscreenPos = _entryPoint.position + new Vector3(-17.5f, 0f, 0f);
-
+		// プレイヤー初期位置セット
+		Vector3 offscreenPos = _entryPoint.position + new Vector3(-17.5f, 3f, 0f);
 		_player.transform.position = offscreenPos;
 
-		// ★ プレイヤーの移動を開始（canMove = true）
+		// プレイヤー移動開始
 		_player.GetComponent<PlayerMove>().canMove = true;
 
 		// ★ カウントダウン開始
 		_countdownImage.gameObject.SetActive(true);
+		_startImage.gameObject.SetActive(false);
 
 		_countdownImage.sprite = _three;
 		yield return new WaitForSeconds(_countSeconds);
@@ -55,14 +64,19 @@ public class GameStartSequence : MonoBehaviour
 		_countdownImage.sprite = _one;
 		yield return new WaitForSeconds(_countSeconds);
 
-		// ★ カウントダウン終了 → スタート表示
-		_countdownImage.sprite = _start;
+		// ★ カウントダウン終了 → START 表示
+		_countdownImage.gameObject.SetActive(false);
 
-		// ★ カメラ追従開始
+		_startImage.sprite = _start;   // ← START の画像をセット
+		_startImage.gameObject.SetActive(true);
+
+		// カメラ追従開始
 		_cameraFollow.enabled = true;
 
 		yield return new WaitForSeconds(_startSeconds);
-		_countdownImage.gameObject.SetActive(false);
+
+		// START を消す
+		_startImage.gameObject.SetActive(false);
 	}
 	private IEnumerator StartCameraFollowDelayed(float delay)
 	{
