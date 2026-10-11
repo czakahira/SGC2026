@@ -28,44 +28,69 @@ public class GameStartSequence : MonoBehaviour
             return;
         }
 
-        _player.SetActive(false);
+        //_player.SetActive(false);
         _cameraFollow.enabled = false;
         _countdownImage.gameObject.SetActive(false);
     }
 
-    private IEnumerator Start()
-    {
-        _countdownImage.gameObject.SetActive(true);
+	private IEnumerator Start()
+	{
+		// ★ プレイヤーを画面外に配置（左に 5m）
+		Vector3 offscreenPos = _entryPoint.position + new Vector3(-17.5f, 0f, 0f);
 
-        _countdownImage.sprite = _three;
-        yield return new WaitForSeconds(_countSeconds);
+		_player.transform.position = offscreenPos;
 
-        _countdownImage.sprite = _two;
-        yield return new WaitForSeconds(_countSeconds);
+		// ★ プレイヤーの移動を開始（canMove = true）
+		_player.GetComponent<PlayerMove>().canMove = true;
 
-        _countdownImage.sprite = _one;
-        yield return new WaitForSeconds(_countSeconds);
+		// ★ カウントダウン開始
+		_countdownImage.gameObject.SetActive(true);
 
-        // このフレームで「すたーと」表示、プレイヤー登場、追従開始
-        _countdownImage.sprite = _start;
-        _player.transform.position = _entryPoint.position;
+		_countdownImage.sprite = _three;
+		yield return new WaitForSeconds(_countSeconds);
 
-        float normalOffsetX = _cameraFollow.offset.x;
-        Vector3 offset = _cameraFollow.offset;
-        float entranceOffsetX =
-            _cameraFollow.transform.position.x - _player.transform.position.x;
-        offset.x = entranceOffsetX;
-        _cameraFollow.offset = offset;
+		_countdownImage.sprite = _two;
+		yield return new WaitForSeconds(_countSeconds);
 
-        _player.SetActive(true);
-        _cameraFollow.enabled = true;
-        StartCoroutine(AnimateCameraOffset(entranceOffsetX, normalOffsetX));
+		_countdownImage.sprite = _one;
+		yield return new WaitForSeconds(_countSeconds);
 
-        yield return new WaitForSeconds(_startSeconds);
-        _countdownImage.gameObject.SetActive(false);
-    }
+		// ★ カウントダウン終了 → スタート表示
+		_countdownImage.sprite = _start;
 
-    private IEnumerator AnimateCameraOffset(float from, float to)
+		// ★ カメラ追従開始
+		_cameraFollow.enabled = true;
+
+		yield return new WaitForSeconds(_startSeconds);
+		_countdownImage.gameObject.SetActive(false);
+	}
+	private IEnumerator StartCameraFollowDelayed(float delay)
+	{
+		yield return new WaitForSeconds(delay);
+		_cameraFollow.enabled = true;
+	}
+	private IEnumerator PlayerRunIn(Vector3 from, Vector3 to)
+	{
+		float duration = 1.0f; // ★ 走ってくる時間
+		float elapsed = 0f;
+
+		while (elapsed < duration)
+		{
+			elapsed += Time.deltaTime;
+			float t = Mathf.Clamp01(elapsed / duration);
+
+			// ★ プレイヤーを滑らかに移動
+			_player.transform.position = Vector3.Lerp(from, to, t);
+
+			yield return null;
+		}
+
+		// 最終位置を保証
+		_player.transform.position = to;
+	}
+
+
+	private IEnumerator AnimateCameraOffset(float from, float to)
     {
         float elapsed = 0f;
 

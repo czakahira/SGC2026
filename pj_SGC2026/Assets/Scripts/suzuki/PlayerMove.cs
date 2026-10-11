@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
 	private Rigidbody rb;
 	private float currentSpeed = 0f;
 
-	private bool canMove = true;
+	public bool canMove = true;
 
 	void Start()
 	{

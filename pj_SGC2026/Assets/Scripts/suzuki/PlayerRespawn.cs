@@ -12,11 +12,6 @@ public class PlayerRespawn : MonoBehaviour
 		instance = this;
 	}
 
-	void Start()
-	{
-		startPos = transform.position;
-		checkpointPosition = startPos; // ★初期チェックポイントはスタート位置
-	}
 	private void Update()
 	{
 		if (transform.position.y < fallThreshold)
