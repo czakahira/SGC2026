@@ -19,25 +19,37 @@ public class PlayerModelColor : MonoBehaviour
             case ColorType.Default:
 				foreach (Renderer renderer in _renderers)
                 {
-                    renderer.material.color = Color.white;
+                    foreach (Material material in renderer.materials)
+                    {
+                        material.color = Color.white;
+                    }
                 }
 				break;
 			case ColorType.Red:
 				foreach (Renderer renderer in _renderers)
                 {
-                    renderer.material.color = Color.red;
+                    foreach (Material material in renderer.materials)
+                    {
+                        material.color = Color.red;
+                    }
                 }
 				break;
 			case ColorType.Blue:
 				foreach (Renderer renderer in _renderers)
                 {
-                    renderer.material.color = Color.blue;
+                    foreach (Material material in renderer.materials)
+                    {
+                        material.color = Color.blue;
+                    }
                 }
 				break;
 			case ColorType.Green:
 				foreach (Renderer renderer in _renderers)
                 {
-                    renderer.material.color = Color.green;
+                    foreach (Material material in renderer.materials)
+                    {
+                        material.color = Color.green;
+                    }
                 }
 				break;
         }
