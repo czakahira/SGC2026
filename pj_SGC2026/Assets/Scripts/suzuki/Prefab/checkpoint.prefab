@@ -117,4 +117,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d05c6e3076b8dc408758409d4f91292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
-  respawnHeightOffset: 1
+  respawnHeightOffset: 3

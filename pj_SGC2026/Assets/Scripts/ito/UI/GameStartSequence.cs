@@ -18,20 +18,28 @@ public class GameStartSequence : MonoBehaviour
     [SerializeField] private float _startSeconds = 0.8f;
     [SerializeField] private float _entranceSeconds = 1.2f;
 
-    private void Awake()
-    {
-        if (_player == null || _entryPoint == null ||
-            _cameraFollow == null || _countdownImage == null)
-        {
-            Debug.LogError("GameStartSequence の参照が不足しています。", this);
-            enabled = false;
-            return;
-        }
+	private void Awake()
+	{
+		if (_player == null || _entryPoint == null ||
+			_cameraFollow == null || _countdownImage == null)
+		{
+			Debug.LogError("GameStartSequence の参照が不足しています。", this);
+			enabled = false;
+			return;
+		}
 
-        //_player.SetActive(false);
-        _cameraFollow.enabled = false;
-        _countdownImage.gameObject.SetActive(false);
-    }
+		// ★ カウントダウン中のカメラ位置を固定 (10,5)
+		Vector3 camPos = new Vector3(
+			-5.5f,                       
+			5f,                        // Y = 5
+			_cameraFollow.transform.position.z // Z はそのまま
+		);
+
+		_cameraFollow.transform.position = camPos;
+
+		_cameraFollow.enabled = false;
+		_countdownImage.gameObject.SetActive(false);
+	}
 
 	private IEnumerator Start()
 	{

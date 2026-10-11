@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-	public float respawnHeightOffset = 1.0f; // ★ 好きな高さに調整できる
+	public float respawnHeightOffset = 3.0f; // ★ 好きな高さに調整できる
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Player"))
