@@ -6,6 +6,7 @@ public class PlayerRespawn : MonoBehaviour
     //落下判定高度
     public float fallThreshold = -5f;
 	public bool isFalling = false;
+	private bool isGameOver = false;
 	void Start()
     {
         startPos = transform.position;
@@ -19,16 +20,21 @@ public class PlayerRespawn : MonoBehaviour
         }
 	}
 	public void Respawn()
-    {
-        transform.position = startPos;
-        //速度リセット
-        var rb = GetComponent<Rigidbody>();
-        if (rb != null )
-        {
-            rb.linearVelocity = Vector3.zero;
-        }
-        ResetCollisions();
-    }
+	{
+		if (PlayerLife.instance.life <= 0) return; // ★ゲームオーバーなら復帰しない
+
+		transform.position = startPos;
+
+		var rb = GetComponent<Rigidbody>();
+		if (rb != null)
+		{
+			rb.linearVelocity = Vector3.zero;
+		}
+	}
+	public void OnGameOver()
+	{
+		isGameOver = true;
+	}
 	private void ResetCollisions()
 	{
 		Collider playerCol = GetComponent<Collider>();

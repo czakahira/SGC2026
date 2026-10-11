@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class ClearObject : MonoBehaviour
 {
-	[Header("リザルトパネル（Canvas内のUI）")]
-	public GameObject resultPanel;
+	[Header("リザルトパネル")]
+	public ResultPanel resultPanel;
+
+	[Header("カメラ追従スクリプト")]
+	public CameraFollow cameraFollow;
 
 	private bool isCleared = false;
 
@@ -18,16 +21,13 @@ public class ClearObject : MonoBehaviour
 
 		Debug.Log("ゲームクリア！");
 
-		// ★リザルトパネル表示（アニメーション開始）
-		if (resultPanel != null)
+		// ★ カメラ追従停止
+		if (cameraFollow != null)
 		{
-			resultPanel.SetActive(true);
-
-			var anim = resultPanel.GetComponent<ResultPanelAnimator>();
-			if (anim != null)
-			{
-				anim.PlayAnimation();
-			}
+			cameraFollow.target = null;  
 		}
+
+		// ★ リザルトパネル表示（クリア用画像をON）
+		resultPanel.ShowClear();
 	}
 }

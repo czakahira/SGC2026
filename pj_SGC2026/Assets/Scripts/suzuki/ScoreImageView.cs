@@ -18,9 +18,19 @@ public class ScoreImageView : MonoBehaviour
 		}
 		// スコアを文字列化
 		string scoreStr = score.ToString();
+
+		
 		// 1文字ずつ画像を生成
 		foreach (char c in scoreStr)
 		{
+			if (score == 0)
+			{
+				scoreStr = "0";
+			}
+			else
+			{
+				scoreStr = "+" + score.ToString();
+			}
 			GameObject obj = Instantiate(digitPrefab, digitRoot);
 			Image img = obj.GetComponent<Image>();
 			Debug.Log("Digit created: " + obj.name);
