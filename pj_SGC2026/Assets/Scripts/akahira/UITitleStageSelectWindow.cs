@@ -1,6 +1,7 @@
 
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 /// <summary>
@@ -52,10 +53,28 @@ public class UITitleStageSelectWindow : UITitleSubWindow
 
 		for (int i = 0; i < m_Btns_StageSelect.Length; i++) {
 			bool isSelected = i == m_CurrentSelectStageIdx;
+			if (isSelected == true) {
+				AudioManager.PlaySE(ESE.Decide_12, 0);
+			}
 			m_Btns_StageSelect[i].SetSelected(isSelected == true);
 		}
 	}
 
+	/// <summary>
+	/// 決定処理
+	/// </summary>
+	protected void SetDecide(int _idx)
+	{
+
+		// 決定
+		m_DecideStageIdx = _idx;
+		m_Btns_StageSelect[m_CurrentSelectStageIdx].SetDecide(true);
+
+		//
+		AudioManager.PlaySE(ESE.Decide_31, 0);
+		// 
+		SetState(EState.Wait_Main);
+	}
 	/// <summary>
 	/// ステージが決定された
 	/// </summary>
@@ -82,12 +101,34 @@ public class UITitleStageSelectWindow : UITitleSubWindow
 		return true;
 	}
 
+
+	protected void OnEnner(UIBehaviour _ui, PointerEventData _data)
+	{
+		for (int i = 0; i < m_Btns_StageSelect.Length; i++) {
+			if (m_Btns_StageSelect[i] == _ui) {
+				SetSelect(i);
+				break;
+			}
+		}
+	}
+	protected void OnClick(UIBehaviour _ui, PointerEventData _data)
+	{
+		for (int i = 0; i < m_Btns_StageSelect.Length; i++) {
+			if (m_Btns_StageSelect[i] == _ui) {
+				SetDecide(i);
+				break;
+			}
+		}
+	}
+
 	protected override void Awake()
 	{
 		base.Awake();
 
 		foreach (var btn in m_Btns_StageSelect) {
 			btn.Init();
+			btn.onEnter += OnEnner;
+			btn.onClick += OnClick;
 		}
 		SetSelect(0);
 
@@ -110,12 +151,7 @@ public class UITitleStageSelectWindow : UITitleSubWindow
 				int idx = m_CurrentSelectStageIdx;
 
 				if (kb.spaceKey.wasPressedThisFrame == true) {
-					// 決定
-					m_Btns_StageSelect[m_CurrentSelectStageIdx].SetDecide(true);
-					//
-					m_DecideStageIdx = m_CurrentSelectStageIdx;
-					// 
-					SetState(EState.Wait_Main);
+					SetDecide(m_CurrentSelectStageIdx);
 				}
 				else if (kb.wKey.wasPressedThisFrame == true) {
 					// ↑

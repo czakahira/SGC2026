@@ -344,6 +344,7 @@ public class TitleManager : MonoBehaviour
 		m_Btn_HowTo.onClick += OnClick;
 		m_StageSelect.btnClose.onClick += OnClick_BackFromnStageSelect;
 		m_Staff.btnClose.onClick += OnClick_BackFromnStaff;
+		m_HowTo.btnClose.onClick += OnClick_BackFromnHowTo;
 		
 
 		// 一番目を選択状態にする
@@ -406,6 +407,8 @@ public class TitleManager : MonoBehaviour
 				break;
 			case EState.StageSelect_Loop:
 				if (m_StageSelect.IsDecide() == true) {
+					// BGM止める
+					AudioManager.StopBGN(EBGM.Title);
 					// シーン遷移
 					GameSceneUtility.LoadSceneAsyncOnLoading("Main").Forget();
 					//

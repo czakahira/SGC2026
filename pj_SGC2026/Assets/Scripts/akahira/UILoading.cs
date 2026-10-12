@@ -20,6 +20,10 @@ public class UILoading : UIComponent
 	/// 
 	/// </summary>
 	[SerializeField] protected RectTransform m_Bar;
+	/// <summary>
+	/// コビト
+	/// </summary>
+	[SerializeField] protected UIFlipAnim m_Ningen;
 
 	[SerializeField] protected EState m_State;
 
@@ -41,6 +45,8 @@ public class UILoading : UIComponent
 		base.Awake();
 
 		m_Timer = new SimpleTimer();
+
+		m_Ningen.Init();
 
 		SetState(EState.Loop);
 	}
@@ -90,6 +96,8 @@ public class UILoading : UIComponent
 		base.EachUpdate(_dt);
 
 		float rate = 0f;
+
+		m_Ningen.UpdateAnim(_dt);
 
 		switch (m_State) {
 			case EState.RunBorder_Horizontal:
