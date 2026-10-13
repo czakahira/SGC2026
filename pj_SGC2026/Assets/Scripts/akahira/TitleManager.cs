@@ -110,10 +110,15 @@ public class TitleManager : GameScene
 	{
 		m_State = _state;
 		switch (m_State) {
+			case EState.Title_Open:
+				UIManager.instance.guide.Open(0);
+				break;
 			case EState.Title_Loop:
+				UIManager.SetGuide(0);
 				break;
 
 			case EState.StageSelect_Open:
+				UIManager.SetGuide(1);
 				m_StageSelect.btnClose.blockRaycasts = true;
 				m_StageSelect.btnClose.interactable = true;
 				m_StageSelect.Open();
@@ -128,6 +133,7 @@ public class TitleManager : GameScene
 
 
 			case EState.Credit_Open:
+				UIManager.SetGuide(2);
 				m_Staff.btnClose.blockRaycasts = true;
 				m_Staff.btnClose.interactable = true;
 				m_Staff.Open();
@@ -141,6 +147,7 @@ public class TitleManager : GameScene
 				break;
 
 			case EState.HowTo_Open:
+				UIManager.SetGuide(3);
 				m_HowTo.btnClose.blockRaycasts = true;
 				m_HowTo.btnClose.interactable = true;
 				m_HowTo.Open();
@@ -154,6 +161,7 @@ public class TitleManager : GameScene
 				break;
 
 			case EState.ToMain:
+				UIManager.instance.guide.Close(0);
 				break;
 
 			case EState.None:
@@ -369,9 +377,7 @@ public class TitleManager : GameScene
 			// --------------------
 			case EState.Title_Open:
 
-				// BGM流す
 				AudioManager.PlayBGN(EBGM.Title);
-
 				SetState(EState.Title_Loop);
 				break;
 			case EState.Title_Loop:

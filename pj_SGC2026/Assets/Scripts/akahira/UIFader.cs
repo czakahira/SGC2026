@@ -46,9 +46,9 @@ public class UIFader : UIComponent
 
 		SetState(EState.None);
 	}
-	public override void EachUpdate(float _dt)
+	public override void OnUpdate(float _dt)
 	{
-		base.EachUpdate(_dt);
+		base.OnUpdate(_dt);
 
 		// フェード処理
 		if (isFade == true) {

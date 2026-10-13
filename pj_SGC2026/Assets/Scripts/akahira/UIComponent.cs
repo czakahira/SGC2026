@@ -62,7 +62,7 @@ public class UIComponent : UIBehaviour
 
 		UIManager.Add(this);
 	}
-	public virtual void EachUpdate(float _dt)
+	public virtual void OnUpdate(float _dt)
 	{
 
 	}

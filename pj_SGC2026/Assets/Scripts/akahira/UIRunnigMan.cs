@@ -82,9 +82,9 @@ public class UIRunnigMan : UIComponent
 		m_SwayTimer.duration = m_SwayDuration;
 
 	}
-	public override void EachUpdate(float _dt)
+	public override void OnUpdate(float _dt)
 	{
-		base.EachUpdate(_dt);
+		base.OnUpdate(_dt);
 
 		if (m_StartWayData == null) { return; }
 		if (m_GoalWayData == null) { return; }

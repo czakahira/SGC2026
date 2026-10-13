@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// マネージャー：UI
@@ -20,10 +20,13 @@ public class UIManager : SystemSingletonBehaviour<UIManager>
 	[SerializeField] protected EventSystem m_EventSystem;
 
 	/// <summary>
+	/// 操作ガイド
+	/// </summary>
+	protected UIGuide m_Guide;
+	/// <summary>
 	/// フェーダー
 	/// </summary>
 	[SerializeField] protected UIFader m_Fader;
-
 	/// <summary>
 	/// UI：ロード中
 	/// </summary>
@@ -40,6 +43,7 @@ public class UIManager : SystemSingletonBehaviour<UIManager>
 	// ========================================
 	//  Property
 	// ========================================
+	public UIGuide guide => m_Guide;
 	public UIFader fader => m_Fader;
 	public UILoading loading => m_Loading;
 
@@ -56,6 +60,8 @@ public class UIManager : SystemSingletonBehaviour<UIManager>
 
 		Canvas canvas = Canvas.Instantiate(Resources.Load<Canvas>("UI/Canvas"));
 		canvas.transform.SetParent(this.transform);
+
+		m_Guide = this.GetComponentInChildren<UIGuide>();
 		m_Fader = this.GetComponentInChildren<UIFader>();
 		m_Loading = this.GetComponentInChildren<UILoading>();
 
@@ -63,18 +69,15 @@ public class UIManager : SystemSingletonBehaviour<UIManager>
 		m_EventSystem.transform.SetParent(this.transform);
 		EventSystem.current = m_EventSystem;
 
+		m_Guide.ForceClose();
 		m_Fader.SetVisible(false);
 		m_Fader.SetInteract(false);
 		m_Loading.SetVisible(false);
 		m_Loading.SetInteract(false);
-
-		GameManager.instance.onUpdate += OnUpdate;
 	}
 	protected override void OnDispose()
 	{
 		base.OnDispose();
-
-		GameManager.instance.onUpdate -= OnUpdate;
 
 		foreach (var ui in s_UIs) {
 			
@@ -94,7 +97,7 @@ public class UIManager : SystemSingletonBehaviour<UIManager>
 		if (s_UIs.Contains(_ui) == true) { return false; }
 
 		s_UIs.Add(_ui);
-		s_OnUpdate += _ui.EachUpdate;
+		s_OnUpdate += _ui.OnUpdate;
 		return true;
 	}
 	public static bool Remove(UIComponent _ui)
@@ -102,7 +105,7 @@ public class UIManager : SystemSingletonBehaviour<UIManager>
 		if (active == false) { return false; }
 		if (s_UIs.Contains(_ui) == false) { return false; }
 
-		s_OnUpdate -= _ui.EachUpdate;
+		s_OnUpdate -= _ui.OnUpdate;
 		s_UIs.Remove(_ui);
 		return true;
 	}
@@ -126,5 +129,10 @@ public class UIManager : SystemSingletonBehaviour<UIManager>
 		instance.fader.FadeIn(_duration);
 	}
 
+
+	public static void SetGuide(int _idx)
+	{
+		instance.guide.SetGuide(_idx);
+	}
 
 }

@@ -46,9 +46,9 @@ public class UITitleSubWindow : UIComponent
 		m_IsViewAnim = false;
 	}
 
-	public override void EachUpdate(float _dt)
+	public override void OnUpdate(float _dt)
 	{
-		base.EachUpdate(_dt);
+		base.OnUpdate(_dt);
 
 		if (m_IsViewAnim == true) {
 			m_ViewAnimTimer.Run(_dt);

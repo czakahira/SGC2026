@@ -134,9 +134,9 @@ public class UITitleStageSelectWindow : UITitleSubWindow
 
 		SetState(EState.None);
 	}
-	public override void EachUpdate(float _dt)
+	public override void OnUpdate(float _dt)
 	{
-		base.EachUpdate(_dt);
+		base.OnUpdate(_dt);
 
 		Keyboard kb = Keyboard.current;
 

@@ -152,9 +152,9 @@ public class UITitleButton : UIButton
 		Init();
 	}
 
-	public override void EachUpdate(float _dt)
+	public override void OnUpdate(float _dt)
 	{
-		base.EachUpdate(_dt);
+		base.OnUpdate(_dt);
 
 		float rate = 0f;
 
