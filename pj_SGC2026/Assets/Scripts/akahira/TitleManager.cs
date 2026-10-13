@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 /// <summary>
 /// シーン：タイトル
 /// </summary>
-public class TitleManager : MonoBehaviour
+public class TitleManager : GameScene
 {
 	public enum EState
 	{
@@ -315,14 +315,10 @@ public class TitleManager : MonoBehaviour
 	}
 
 
-
-
-	void Awake()
+	public override void OnEnter()
 	{
+		base.OnEnter();
 
-	}
-	void Start()
-	{
 		m_StageSelect.Init();
 		m_StageSelect.CloseForce();
 		m_Staff.Init();
@@ -354,14 +350,16 @@ public class TitleManager : MonoBehaviour
 
 		SetState(EState.Title_Open);
 	}
-	void Update()
+	public override void OnUpdate(float _dt)
 	{
+		base.OnUpdate(_dt);
+
 		float dt = Time.deltaTime;
 		Keyboard kb = Keyboard.current;
 
 		m_PlayerWalkAnim_Timer.Run(dt);
 		//m_RunnnigMan.localRotation = Quaternion.Lerp(Quaternion.Euler(m_PlayerWalk_Euler_In), Quaternion.Euler(m_PlayerWalk_Euler_Out), m_PlayerWalkAnim_Timer.progress);
-		if (m_PlayerWalkAnim_Timer.IsElapsed() == true) {
+		if (m_PlayerWalkAnim_Timer.complete == true) {
 			m_PlayerWalkAnim_Timer.reverse = m_PlayerWalkAnim_Timer.reverse == false;
 		}
 
@@ -481,4 +479,5 @@ public class TitleManager : MonoBehaviour
 		}
 
 	}
+
 }

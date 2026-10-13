@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -7,8 +8,12 @@ using UnityEngine.UI;
 /// <summary>
 /// マネージャー：UI
 /// </summary>
-public class UIManager : SingletonBehaviour<UIManager>
+public class UIManager : SystemSingletonBehaviour<UIManager>
 {
+	// ========================================
+	//  Member
+	// ========================================
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -23,36 +28,84 @@ public class UIManager : SingletonBehaviour<UIManager>
 	/// UI：ロード中
 	/// </summary>
 	[SerializeField] protected UILoading m_Loading;
+	/// <summary>
+	/// 
+	/// </summary>
+	protected static List<UIComponent> s_UIs;
+	/// <summary>
+	/// 
+	/// </summary>
+	protected static event UnityAction<float> s_OnUpdate;
 
-
+	// ========================================
+	//  Property
+	// ========================================
 	public UIFader fader => m_Fader;
 	public UILoading loading => m_Loading;
 
-	public event UnityAction<float> onUpdate;
 
 
-
-	protected override void Init()
+	// ========================================
+	//  Method
+	// ========================================
+	protected override void OnInitialize()
 	{
-		base.Init();
+		base.OnInitialize();
 
-		if (m_EventSystem != null) {
-			EventSystem.current = m_EventSystem;
-		}
+		s_UIs = new List<UIComponent>(100);
 
-		GameManager.instance.onUpdate += OnUpdate;
+		Canvas canvas = Canvas.Instantiate(Resources.Load<Canvas>("UI/Canvas"));
+		canvas.transform.SetParent(this.transform);
+		m_Fader = this.GetComponentInChildren<UIFader>();
+		m_Loading = this.GetComponentInChildren<UILoading>();
+
+		m_EventSystem = EventSystem.Instantiate(Resources.Load<EventSystem>("UI/EventSystem"));
+		m_EventSystem.transform.SetParent(this.transform);
+		EventSystem.current = m_EventSystem;
 
 		m_Fader.SetVisible(false);
 		m_Fader.SetInteract(false);
 		m_Loading.SetVisible(false);
 		m_Loading.SetInteract(false);
-	}
 
-	protected void OnUpdate(float _dt)
+		GameManager.instance.onUpdate += OnUpdate;
+	}
+	protected override void OnDispose()
 	{
-		onUpdate?.Invoke(_dt);
+		base.OnDispose();
+
+		GameManager.instance.onUpdate -= OnUpdate;
+
+		foreach (var ui in s_UIs) {
+			
+		}
+		s_UIs.Clear();
+		s_UIs = null;
 	}
 
+	protected override void OnUpdate(float _dt)
+	{
+		s_OnUpdate?.Invoke(_dt);
+	}
+
+	public static bool Add(UIComponent _ui)
+	{
+		if (active == false) { return false; }
+		if (s_UIs.Contains(_ui) == true) { return false; }
+
+		s_UIs.Add(_ui);
+		s_OnUpdate += _ui.EachUpdate;
+		return true;
+	}
+	public static bool Remove(UIComponent _ui)
+	{
+		if (active == false) { return false; }
+		if (s_UIs.Contains(_ui) == false) { return false; }
+
+		s_OnUpdate -= _ui.EachUpdate;
+		s_UIs.Remove(_ui);
+		return true;
+	}
 
 	public static void LoadStart()
 	{

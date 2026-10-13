@@ -16,12 +16,10 @@ public class SimpleTimer
 	/// 計測期間 [s]
 	/// </summary>
 	[SerializeField] protected float m_Duration;
-
-
 	/// <summary>
 	/// 経過期間 [s]
 	/// </summary>
-	[SerializeField] protected float m_ElapedTime;
+	[SerializeField] protected float m_ElapsedTime;
 	/// <summary>
 	/// フラグ：カウントダウン
 	/// </summary>
@@ -30,8 +28,10 @@ public class SimpleTimer
 	/// フラグ：ループ
 	/// </summary>
 	[SerializeField] protected bool m_Loop;
-
-	protected bool m_IsElapsed = false;
+	/// <summary>
+	/// 
+	/// </summary>
+	protected bool m_Complete = false;
 
 	// ========================================
 	//  Property
@@ -41,6 +41,7 @@ public class SimpleTimer
 		get { return m_Duration; }
 		set { m_Duration = value; }
 	}
+	public float elapsedTime => m_ElapsedTime;
 	public bool reverse
 	{
 		get { return m_Reverse; }
@@ -54,7 +55,8 @@ public class SimpleTimer
 	/// <summary>
 	/// 進捗率
 	/// </summary>
-	public float progress => (m_ElapedTime / m_Duration);
+	public float progress => (m_ElapsedTime / m_Duration);
+	public bool complete => m_Complete;
 
 	
 
@@ -63,14 +65,14 @@ public class SimpleTimer
 	// ========================================
 	public void Run(float _dt)
 	{
-		m_IsElapsed = false;
+		m_Complete = false;
 
-		m_ElapedTime += _dt * (m_Reverse == true ? -1f : 1f);
-		m_ElapedTime = Mathf.Clamp(m_ElapedTime, 0, m_Duration);
+		m_ElapsedTime += _dt * (m_Reverse == true ? -1f : 1f);
+		m_ElapsedTime = Mathf.Clamp(m_ElapsedTime, 0, m_Duration);
 
-		bool isElapsedWasFrame = m_Reverse == true ? m_ElapedTime <= 0 : m_ElapedTime >= m_Duration;
+		bool isElapsedWasFrame = m_Reverse == true ? m_ElapsedTime <= 0 : IsElapsed(m_Duration);
 		if (isElapsedWasFrame == true) {
-			m_IsElapsed = true;
+			m_Complete = true;
 
 			if (loop == true) {
 				Reset();
@@ -79,19 +81,22 @@ public class SimpleTimer
 
 
 	}
-	public bool IsElapsed()
+	/// <summary>
+	/// 指定期間経過したか
+	/// </summary>
+	public bool IsElapsed(float _value)
 	{
-		return m_IsElapsed;
+		return m_ElapsedTime >= _value;
 	}
 	public bool Alrm(float _dt)
 	{
 		Run(_dt);
-		return IsElapsed();
+		return complete;
 	}
 
 	public void SetElapsed(float _value)
 	{
-		m_ElapedTime = _value;
+		m_ElapsedTime = _value;
 	}
 	/// <summary>
 	/// リセット

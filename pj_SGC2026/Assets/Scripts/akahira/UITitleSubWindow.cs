@@ -46,7 +46,7 @@ public class UITitleSubWindow : UIComponent
 		m_IsViewAnim = false;
 	}
 
-	protected override void EachUpdate(float _dt)
+	public override void EachUpdate(float _dt)
 	{
 		base.EachUpdate(_dt);
 
@@ -54,7 +54,7 @@ public class UITitleSubWindow : UIComponent
 			m_ViewAnimTimer.Run(_dt);
 			float rate = m_ViewAnimCurve.Evaluate(m_ViewAnimTimer.progress);
 			UpdateViewAnim(rate);
-			if (m_ViewAnimTimer.IsElapsed() == true) {
+			if (m_ViewAnimTimer.complete == true) {
 				m_IsViewAnim = false;
 			}
 		}

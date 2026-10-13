@@ -50,7 +50,7 @@ public class UIRunnigMan : UIComponent
 			m_GoalWayData.target.anchoredPosition,
 			m_WayPassTimer.progress
 		);
-		if (m_WayPassTimer.IsElapsed() == true) {
+		if (m_WayPassTimer.complete == true) {
 			SetWayIdx(++m_StartWayIdx);
 		}
 	}
@@ -82,9 +82,12 @@ public class UIRunnigMan : UIComponent
 		m_SwayTimer.duration = m_SwayDuration;
 
 	}
-	protected override void EachUpdate(float _dt)
+	public override void EachUpdate(float _dt)
 	{
 		base.EachUpdate(_dt);
+
+		if (m_StartWayData == null) { return; }
+		if (m_GoalWayData == null) { return; }
 
 		// Y軸回転
 		Quaternion rot = this.rectTransform.localRotation;
@@ -97,7 +100,7 @@ public class UIRunnigMan : UIComponent
 		// ゆらゆら
 		m_SwayTimer.Run(_dt);
 		m_Ningen.localRotation = Quaternion.Lerp(Quaternion.Euler(m_Start_Euler), Quaternion.Euler(m_Goal_Euler), m_SwayTimer.progress);
-		if (m_SwayTimer.IsElapsed() == true) {
+		if (m_SwayTimer.complete == true) {
 			m_SwayTimer.reverse = m_SwayTimer.reverse == false;
 		}
 

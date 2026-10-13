@@ -5,24 +5,57 @@ using Cysharp.Threading.Tasks;
 /// <summary>
 /// シーン：起動
 /// </summary>
-public class BootManager : MonoBehaviour
+public class BootManager : GameScene
 {
-
-	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-	public static void Boot()
+	public enum EState
 	{
-		bool isBoot = true;
-		isBoot &= GameManager.isActive == true;
-		isBoot &= GameSceneManager.isActive == true;
-		isBoot &= UIManager.isActive == true;
-		isBoot &= AudioManager.isActive == true;
+		None = -1,
 
-		// 準備完了したらタイトルへ
-		if (isBoot == true) {
-//			GameSceneManager.instance.Load("Title");
-			GameSceneUtility.LoadSceneAsyncOnFade("Title").Forget();
+		Wait_Boot,
+		Wait_Load,
+	}
+
+	private static bool s_Booted = false;
+	[SerializeField] protected EState m_State = EState.None;
+
+	private void Start()
+	{
+		bool isBoot = GameManager.TryInitialize() == true;
+		isBoot &= GameSceneManager.TryInitialize() == true;
+		isBoot &= UIManager.TryInitialize() == true;
+		isBoot &= AudioManager.TryInitialize() == true;
+
+		GameManager.instance.onDispose += AudioManager.Dispose;
+		GameManager.instance.onDispose += UIManager.Dispose;
+		GameManager.instance.onDispose += GameSceneManager.Dispose;
+
+		s_Booted = isBoot;
+
+		m_State = EState.Wait_Boot;
+	}
+
+	private void Update()
+	{
+
+		switch (m_State) {
+
+			case EState.Wait_Boot:
+
+				// 準備完了したらタイトルへ
+				if (s_Booted == true) {
+//					GameSceneManager.instance.Load("Title");
+					GameSceneUtility.LoadSceneAsyncOnFade("Title", _durationOut: 0f, _durationIn: 0.2f).Forget();
+					m_State = EState.Wait_Load;
+				}
+				break;
+
+			case EState.Wait_Load:
+				break;
+
+			case EState.None:
+			default:
+				break;
 		}
-
 	}
 
 }

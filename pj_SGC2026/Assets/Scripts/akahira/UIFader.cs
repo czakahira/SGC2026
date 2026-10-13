@@ -46,7 +46,7 @@ public class UIFader : UIComponent
 
 		SetState(EState.None);
 	}
-	protected override void EachUpdate(float _dt)
+	public override void EachUpdate(float _dt)
 	{
 		base.EachUpdate(_dt);
 
@@ -54,7 +54,7 @@ public class UIFader : UIComponent
 		if (isFade == true) {
 			m_Timer.Run(_dt);
 			this.alpha = m_Timer.progress;
-			if (m_Timer.IsElapsed() == true) {
+			if (m_Timer.complete == true) {
 				// カウントダウン = フェードイン
 				if (m_Timer.reverse == true) {
 					// 遮蔽しないように
@@ -78,6 +78,13 @@ public class UIFader : UIComponent
 		SetState(EState.Fade);
 	}
 	/// <summary>
+	/// 染色　塗りつぶし
+	/// </summary>
+	public void Dye()
+	{
+		this.alpha = 1f;
+	}
+	/// <summary>
 	/// 画面が色づいていく
 	/// </summary>
 	/// <param name="_duration"></param>
@@ -88,6 +95,13 @@ public class UIFader : UIComponent
 		m_Timer.SetElapsed(_duration);
 		SetInteract(true);
 		SetState(EState.Fade);
+	}
+	/// <summary>
+	/// 脱色
+	/// </summary>
+	public void Breach()
+	{
+		this.alpha = 0f;
 	}
 
 }

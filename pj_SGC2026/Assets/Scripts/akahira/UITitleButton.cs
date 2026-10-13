@@ -152,7 +152,7 @@ public class UITitleButton : UIButton
 		Init();
 	}
 
-	protected override void EachUpdate(float _dt)
+	public override void EachUpdate(float _dt)
 	{
 		base.EachUpdate(_dt);
 
@@ -165,7 +165,7 @@ public class UITitleButton : UIButton
 			m_SelectAnim_Timer.Run(_dt);
 			rate = m_SelectAnim_Timer.progress;
 			rectTransform.localScale = Vector3.Lerp(m_Scale_Out, m_Scale_In, rate);
-			if (m_SelectAnim_Timer.IsElapsed() == false) {
+			if (m_SelectAnim_Timer.complete == false) {
 			}
 		}
 

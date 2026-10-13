@@ -134,7 +134,7 @@ public class UITitleStageSelectWindow : UITitleSubWindow
 
 		SetState(EState.None);
 	}
-	protected override void EachUpdate(float _dt)
+	public override void EachUpdate(float _dt)
 	{
 		base.EachUpdate(_dt);
 

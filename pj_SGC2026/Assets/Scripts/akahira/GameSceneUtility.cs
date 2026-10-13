@@ -2,13 +2,20 @@
 using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
+using Cysharp.Threading.Tasks;
 
 public class GameSceneUtility
 {
 
-	public async static UniTask LoadSceneAsyncOnLoading(string _sceneName, UnityAction<Scene> _onLoad = null, LoadSceneMode _loadSceneMode = LoadSceneMode.Single)
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="_sceneName"></param>
+	/// <param name="_onComplete"></param>
+	/// <param name="_loadSceneMode"></param>
+	/// <returns></returns>
+	public async static UniTask LoadSceneAsyncOnLoading(string _sceneName, UnityAction<Scene> _onComplete = null, LoadSceneMode _loadSceneMode = LoadSceneMode.Single)
 	{
 		CancellationToken token = GameManager.instance.quitToken;
 
@@ -19,32 +26,40 @@ public class GameSceneUtility
 		}
 		// シーン読み込む
 		await GameSceneManager.instance.LoadAsync(_sceneName, _loadSceneMode);
+		// 少し待つ
+		await UniTask.Delay(2000, DelayType.UnscaledDeltaTime, PlayerLoopTiming.PreUpdate, token);
 		// ロードUIを閉じる
 		UIManager.LoadEnd();
 		while (UIManager.instance.loading.isloading == true) {
 			await UniTask.Yield(PlayerLoopTiming.Update, token);
 		}
 		// コールバック
-		_onLoad?.Invoke(SceneManager.GetSceneByName(_sceneName));
+		_onComplete?.Invoke(SceneManager.GetSceneByName(_sceneName));
 	}
-
-	public async static UniTask LoadSceneAsyncOnFade(string _sceneName, UnityAction<Scene> _onLoad = null, LoadSceneMode _loadSceneMode = LoadSceneMode.Single)
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="_sceneName"></param>
+	/// <param name="_onComplete"></param>
+	/// <param name="_loadSceneMode"></param>
+	/// <returns></returns>
+	public async static UniTask LoadSceneAsyncOnFade(string _sceneName, UnityAction<Scene> _onComplete = null, LoadSceneMode _loadSceneMode = LoadSceneMode.Single, float _durationOut = 0.5f, float _durationIn = 0.5f)
 	{
 		CancellationToken token = GameManager.instance.quitToken;
 
-		UIManager.FadeOut();
+		UIManager.FadeOut(_durationOut);
 		while (UIManager.instance.fader.isFade == true) {
 			await UniTask.Yield(PlayerLoopTiming.Update, token);
 		}
 
 		await GameSceneManager.instance.LoadAsync(_sceneName, _loadSceneMode);
 
-		UIManager.FadeIn();
+		UIManager.FadeIn(_durationIn);
 		while (UIManager.instance.fader.isFade == true) {
 			await UniTask.Yield(PlayerLoopTiming.Update, token);
 		}
 
-		_onLoad?.Invoke(SceneManager.GetSceneByName(_sceneName));
+		_onComplete?.Invoke(SceneManager.GetSceneByName(_sceneName));
 	}
 
 }

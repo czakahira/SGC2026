@@ -91,7 +91,7 @@ public class UILoading : UIComponent
 		return m_State == _state;
 	}
 
-	protected override void EachUpdate(float _dt)
+	public override void EachUpdate(float _dt)
 	{
 		base.EachUpdate(_dt);
 
@@ -104,7 +104,7 @@ public class UILoading : UIComponent
 				m_Timer.Run(_dt);
 				rate = m_Timer.progress;
 				m_Bar.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(m_Size_Horizontal.x, m_Size_Horizontal.y, rate));
-				if (m_Timer.IsElapsed() == true) {
+				if (m_Timer.complete == true) {
 					SetState(m_Reverse ? EState.Loop : EState.RunBorder_Vertical);
 				}
 				break;
@@ -112,7 +112,7 @@ public class UILoading : UIComponent
 				m_Timer.Run(_dt);
 				rate = m_Timer.progress;
 				m_Bar.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Lerp(m_Size_Vertical.x, m_Size_Vertical.y, rate));
-				if (m_Timer.IsElapsed() == true) {
+				if (m_Timer.complete == true) {
 					SetState(m_Reverse ? EState.RunBorder_Horizontal : EState.Loop);
 				}
 				break;

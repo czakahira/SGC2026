@@ -2,6 +2,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// UI の基底クラス
+/// </summary>
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(CanvasGroup))]
 public class UIComponent : UIBehaviour
@@ -10,7 +13,8 @@ public class UIComponent : UIBehaviour
 	private RectTransform m_RectTransform;
 	private CanvasGroup m_CanvasGroup;
 
-	public RectTransform rectTransform {
+	public RectTransform rectTransform
+	{
 		get {
 			if (m_RectTransform == null) {
 				m_RectTransform = this.GetComponent<RectTransform>();
@@ -56,15 +60,15 @@ public class UIComponent : UIBehaviour
 	{
 		base.Awake();
 
-		UIManager.instance.onUpdate += EachUpdate;
+		UIManager.Add(this);
 	}
-	protected virtual void EachUpdate(float _dt)
+	public virtual void EachUpdate(float _dt)
 	{
 
 	}
 	protected override void OnDestroy()
 	{
-		UIManager.instance.onUpdate -= EachUpdate;
+		UIManager.Remove(this);
 	}
 
 }

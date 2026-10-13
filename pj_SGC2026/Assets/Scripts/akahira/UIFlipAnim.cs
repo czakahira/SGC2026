@@ -34,7 +34,7 @@ public class UIFlipAnim : MonoBehaviour
 		if (m_Duration <= 0f) { return; }
 
 		m_Timer.Run(_dt);
-		if (m_Timer.IsElapsed() == true) {
+		if (m_Timer.complete == true) {
 			NextIdx();
 		}
 	}
