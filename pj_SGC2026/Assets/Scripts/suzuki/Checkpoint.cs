@@ -1,16 +1,20 @@
+
 using UnityEngine;
 
-public class Checkpoint : MonoBehaviour
+namespace SGC2026
 {
-	public float respawnHeightOffset = 3.0f; // ★ 好きな高さに調整できる
-	private void OnTriggerEnter(Collider other)
+	public class Checkpoint : MonoBehaviour
 	{
-		if (other.CompareTag("Player"))
+		public float respawnHeightOffset = 3.0f; // ★ 好きな高さに調整できる
+		private void OnTriggerEnter(Collider other)
 		{
-			Vector3 pos = transform.position;
-			pos.y += respawnHeightOffset; // ★ 高さを少し上げる
-			PlayerRespawn.instance.SetCheckpoint(pos);
-			Debug.Log("チェックポイント更新: " + pos);
+			if (other.CompareTag("Player")) {
+				Vector3 pos = transform.position;
+				pos.y += respawnHeightOffset; // ★ 高さを少し上げる
+				PlayerRespawn.instance.SetCheckpoint(pos);
+				Debug.Log("チェックポイント更新: " + pos);
+			}
 		}
+
 	}
 }

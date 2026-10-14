@@ -21,19 +21,21 @@ namespace SGC2026
 	/// <summary>
 	/// 動体オブジェクト
 	/// </summary>
+	[RequireComponent(typeof(CollisionBahaviour))]
 	public class DynamicObject : MonoBehaviour
 	{
+		[SerializeField] protected CollisionBahaviour m_Collision;
 
-		public event UnityAction<ECollisionEvent, DynamicObject, Collision> onCollision;
-		public event UnityAction<ECollisionEvent, DynamicObject, Collider> onTrigger;
+		public CollisionBahaviour collision => m_Collision;
+		
 
 		public virtual void Initialize()
 		{
-
+			m_Collision = this.GetComponent<CollisionBahaviour>();
 		}
 		public virtual void Dispose()
 		{
-			onCollision = null;
+			m_Collision.Clear();
 		}
 		public virtual void OnUpdate(float _dt)
 		{
@@ -48,14 +50,7 @@ namespace SGC2026
 
 		}
 
-		private void OnCollisionEnter(Collision _collision)
-		{
-			onCollision?.Invoke(ECollisionEvent.CollisionEnter, this, _collision);
-		}
-		private void OnTriggerEnter(Collider _collider)
-		{
-			onTrigger?.Invoke(ECollisionEvent.TriggerEnter, this, _collider);
-		}
+		
 
 	}
 }

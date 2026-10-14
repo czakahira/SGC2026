@@ -96,6 +96,7 @@ namespace SGC2026
 		// ========================================
 
 		public EColorType color => m_Color;
+		public Collider collider => m_CapsuleCollider;
 		public bool isGrounded => m_Grounded;
 
 

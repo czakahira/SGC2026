@@ -6,7 +6,7 @@ namespace SGC2026
 	/// <summary>
 	/// 
 	/// </summary>
-	public class ColorObstacleEnd : ColoredObject
+	public class ColorObstacleEnd : MonoBehaviour
 	{
 #if false
 		public EColorType obstacleColor;

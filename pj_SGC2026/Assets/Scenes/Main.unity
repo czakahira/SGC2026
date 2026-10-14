@@ -887,6 +887,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5486937469b3acf40841bd2fbddaf8ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SGC2026.Main
+  m_Effect_Score: {fileID: 6043713031630429444, guid: 8a8ad39086e3f1d4782b247cb6b499c6, type: 3}
+  m_CameraFollow: {fileID: 1982328922}
+  m_Objects: []
   m_Player: {fileID: 1662737043}
 --- !u!1001 &333215440
 PrefabInstance:
@@ -3995,8 +3998,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc620fdb185da7e40ac9a11f9fe273f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  target: {fileID: 1348369053}
-  offset: {x: 10, y: 5, z: 0}
+  m_Target: {fileID: 1348369053}
+  m_Offset: {x: 10, y: 5, z: 0}
 --- !u!1001 &2032129578
 PrefabInstance:
   m_ObjectHideFlags: 0

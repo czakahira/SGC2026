@@ -80,6 +80,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GreenLego
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5b8e453791e4df84bb6b7bc50a0ae6de, type: 3}
+      propertyPath: m_TagString
+      value: ground
+      objectReference: {fileID: 0}
     - target: {fileID: 4191509097384965755, guid: 5b8e453791e4df84bb6b7bc50a0ae6de, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -106,6 +110,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b8e453791e4df84bb6b7bc50a0ae6de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6067225654908695405}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b8e453791e4df84bb6b7bc50a0ae6de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8700388791873599384}
   m_SourcePrefab: {fileID: 100100000, guid: 5b8e453791e4df84bb6b7bc50a0ae6de, type: 3}
 --- !u!1 &4123502279332860899 stripped
 GameObject:
@@ -145,4 +152,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dc17cd9cb932b9418775d182eb361d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColorGround
-  floorColor: 4
+  m_Collision: {fileID: 8700388791873599384}
+  m_Color: 4
+  m_Collider: {fileID: 2495532163293403734}
+--- !u!114 &8700388791873599384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4123502279332860899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a674d97436df9247933b5acf29da599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGC2026.CollisionBahaviour

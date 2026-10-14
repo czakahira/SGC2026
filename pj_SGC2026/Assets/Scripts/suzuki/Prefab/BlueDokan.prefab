@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6796370539241765570}
-  - component: {fileID: 659638363418451397}
   - component: {fileID: 7616319471109100714}
+  - component: {fileID: 5057399669122564434}
   m_Layer: 0
   m_Name: ObstacleEnd
   m_TagString: Untagged
@@ -33,20 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 706379482136543755}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &659638363418451397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6674227865076151927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f8f1ff59533c7542959fff04ea40faf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ColorObstacleEnd
-  obstacleColor: 2
-  scoreEffectPrefab: {fileID: 6043713031630429444, guid: 8a8ad39086e3f1d4782b247cb6b499c6, type: 3}
 --- !u!65 &7616319471109100714
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -68,6 +54,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5057399669122564434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6674227865076151927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a674d97436df9247933b5acf29da599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGC2026.CollisionBahaviour
 --- !u!1001 &1028836222998603232
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -157,6 +155,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f8488459c8fa8df47927fd7e60e60188, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1075487857235177169}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f8488459c8fa8df47927fd7e60e60188, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3281296960805114673}
   m_SourcePrefab: {fileID: 100100000, guid: f8488459c8fa8df47927fd7e60e60188, type: 3}
 --- !u!1 &181904070878943409 stripped
 GameObject:
@@ -196,8 +197,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32c2c840fbddf15418bcbbfdf498227b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColorObstacles
-  obstacleColor: 3
-  obstacleCol: {fileID: 633819662629287714}
+  m_Collision: {fileID: 3281296960805114673}
+  m_Color: 3
+  m_Collider: {fileID: 633819662629287714}
+  m_ScoreTrigger: {fileID: 5057399669122564434}
+--- !u!114 &3281296960805114673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181904070878943409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a674d97436df9247933b5acf29da599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGC2026.CollisionBahaviour
 --- !u!4 &706379482136543755 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f8488459c8fa8df47927fd7e60e60188, type: 3}

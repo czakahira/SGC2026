@@ -1,11 +1,14 @@
 
 using UnityEngine;
 
-/// <summary>
-/// 色：床
-/// </summary>
-public class ColorGround : MonoBehaviour
+namespace SGC2026
 {
+	/// <summary>
+	/// 色：床
+	/// </summary>
+	public class ColoredGround : ColoredObject
+	{
+#if false
 	public EColorType floorColor;
 	private Collider floorCol;
 
@@ -26,5 +29,8 @@ public class ColorGround : MonoBehaviour
 
 		// ★長押し中だけすり抜ける
 		Physics.IgnoreCollision(playerCol, floorCol, sameColor);
+	}
+#endif
+
 	}
 }

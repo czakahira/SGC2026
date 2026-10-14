@@ -1,33 +1,35 @@
+
 using UnityEngine;
 
-public class ClearObject : MonoBehaviour
+namespace SGC2026
 {
-	[Header("リザルトパネル")]
-	public ResultPanel resultPanel;
-
-	[Header("カメラ追従スクリプト")]
-	public CameraFollow cameraFollow;
-
-	private bool isCleared = false;
-
-	private void OnTriggerEnter(Collider other)
+	public class ClearObject : MonoBehaviour
 	{
-		if (isCleared) return;
+		[Header("リザルトパネル")]
+		public ResultPanel resultPanel;
 
-		var player = other.GetComponent<PlayerColor>();
-		if (player == null) return;
+		[Header("カメラ追従スクリプト")]
+		public CameraFollow cameraFollow;
 
-		isCleared = true;
+		private bool isCleared = false;
 
-		Debug.Log("ゲームクリア！");
-
-		// ★ カメラ追従停止
-		if (cameraFollow != null)
+		private void OnTriggerEnter(Collider other)
 		{
-			cameraFollow.target = null;  
+			if (isCleared) return;
+
+			var player = other.GetComponent<PlayerColor>();
+			if (player == null) return;
+
+			isCleared = true;
+
+			Debug.Log("ゲームクリア！");
+
+			// ★ カメラ追従停止
+			cameraFollow.SetTarget(null);
+
+			// ★ リザルトパネル表示（クリア用画像をON）
+			resultPanel.ShowClear();
 		}
 
-		// ★ リザルトパネル表示（クリア用画像をON）
-		resultPanel.ShowClear();
 	}
 }

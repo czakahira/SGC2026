@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
 
 public class ResultPanel : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class ResultPanel : MonoBehaviour
 			ScoreManager.instance.ResetScore();
 
 			// タイトルへ戻る
-			SceneManager.LoadScene("Title");
+			GameSceneUtility.LoadSceneAsyncOnLoading("Title").Forget();
 		});
 	}
 	private void OnEnable()

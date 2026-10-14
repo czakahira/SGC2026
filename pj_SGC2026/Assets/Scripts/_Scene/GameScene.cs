@@ -11,15 +11,14 @@ public class GameScene : MonoBehaviour
 	/// </summary>
 	public virtual void OnEnter()
 	{
-
+		Debug.Log("Enter");
 	}
 	/// <summary>
 	/// 退室
 	/// </summary>
 	public virtual void OnExit()
 	{
-
-
+		Debug.Log("Exit");
 	}
 	public virtual void OnUpdate(float _dt)
 	{
