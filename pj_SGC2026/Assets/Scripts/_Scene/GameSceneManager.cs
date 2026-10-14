@@ -10,6 +10,9 @@ using Cysharp.Threading.Tasks;
 /// </summary>
 public class GameSceneManager : SystemSingletonBehaviour<GameSceneManager>
 {
+	/// <summary>
+	/// 入室済みのシーン一覧
+	/// </summary>
 	private static List<GameSceneHandle> s_Scenes;
 
 	static GameSceneManager()
@@ -101,7 +104,7 @@ public class GameSceneManager : SystemSingletonBehaviour<GameSceneManager>
 	{
 		return GetScene<T>(SceneManager.GetSceneByName(_name));
 	}
-	private static bool Handling(Scene _scene)
+	private static bool IsHandling(Scene _scene)
 	{
 		foreach (var hdl in s_Scenes) {
 			if (hdl.scene == _scene) {
@@ -113,7 +116,7 @@ public class GameSceneManager : SystemSingletonBehaviour<GameSceneManager>
 
 	public static void Enter(Scene _scene)
 	{
-		if (Handling(_scene) == true) { return; }
+		if (IsHandling(_scene) == true) { return; }
 
 		GameSceneHandle handle = new GameSceneHandle(_scene);
 		Add(handle);
@@ -121,7 +124,7 @@ public class GameSceneManager : SystemSingletonBehaviour<GameSceneManager>
 	}
 	public static void Exit(Scene _scene)
 	{
-		if (Handling(_scene) == false) { return; }
+		if (IsHandling(_scene) == false) { return; }
 
 		GameSceneHandle handle = GetHandle(_scene);
 		handle.ExitHandlingScene();

@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 /// <summary>
 /// シーン：タイトル
 /// </summary>
-public class TitleManager : GameScene
+public class Title : GameScene
 {
 	public enum EState
 	{

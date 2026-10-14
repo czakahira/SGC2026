@@ -13,13 +13,13 @@ public class SimpleTimer
 	// ========================================
 
 	/// <summary>
-	/// 計測期間 [s]
-	/// </summary>
-	[SerializeField] protected float m_Duration;
-	/// <summary>
 	/// 経過期間 [s]
 	/// </summary>
 	[SerializeField] protected float m_ElapsedTime;
+	/// <summary>
+	/// 計測期間 [s]
+	/// </summary>
+	[SerializeField] protected float m_Duration;
 	/// <summary>
 	/// フラグ：カウントダウン
 	/// </summary>
@@ -36,12 +36,12 @@ public class SimpleTimer
 	// ========================================
 	//  Property
 	// ========================================
+	public float elapsedTime => m_ElapsedTime;
 	public float duration
 	{
 		get { return m_Duration; }
 		set { m_Duration = value; }
 	}
-	public float elapsedTime => m_ElapsedTime;
 	public bool reverse
 	{
 		get { return m_Reverse; }
@@ -74,11 +74,11 @@ public class SimpleTimer
 		if (isElapsedWasFrame == true) {
 			m_Complete = true;
 
+			// ループ
 			if (loop == true) {
 				Reset();
 			}
 		}
-
 
 	}
 	/// <summary>
@@ -88,6 +88,9 @@ public class SimpleTimer
 	{
 		return m_ElapsedTime >= _value;
 	}
+	/// <summary>
+	/// アラーム
+	/// </summary>
 	public bool Alrm(float _dt)
 	{
 		Run(_dt);

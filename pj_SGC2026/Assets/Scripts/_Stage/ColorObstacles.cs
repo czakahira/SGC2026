@@ -1,8 +1,13 @@
+
 using UnityEngine;
 
+
+/// <summary>
+/// 色：障害物
+/// </summary>
 public class ColorObstacles : MonoBehaviour
 {
-	public ColorType obstacleColor;
+	public EColorType obstacleColor;
 
 	// ★ここは“壁本体”のコライダーだけ
 	[SerializeField] private Collider obstacleCol;

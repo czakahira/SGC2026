@@ -1,8 +1,12 @@
+
 using UnityEngine;
 
+/// <summary>
+/// 色：床
+/// </summary>
 public class ColorGround : MonoBehaviour
 {
-	public ColorType floorColor;
+	public EColorType floorColor;
 	private Collider floorCol;
 
 	private void Awake()

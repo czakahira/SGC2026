@@ -12,11 +12,11 @@ public class PlayerModelColor : MonoBehaviour
 
     private void Update()
     {
-        ColorType currentColor = _playerColor.currentColor;
+        EColorType currentColor = _playerColor.currentColor;
 
         switch(currentColor)
         {
-            case ColorType.Default:
+            case EColorType.Default:
 				foreach (Renderer renderer in _renderers)
                 {
                     foreach (Material material in renderer.materials)
@@ -25,7 +25,7 @@ public class PlayerModelColor : MonoBehaviour
                     }
                 }
 				break;
-			case ColorType.Red:
+			case EColorType.Red:
 				foreach (Renderer renderer in _renderers)
                 {
                     foreach (Material material in renderer.materials)
@@ -34,7 +34,7 @@ public class PlayerModelColor : MonoBehaviour
                     }
                 }
 				break;
-			case ColorType.Blue:
+			case EColorType.Blue:
 				foreach (Renderer renderer in _renderers)
                 {
                     foreach (Material material in renderer.materials)
@@ -43,7 +43,7 @@ public class PlayerModelColor : MonoBehaviour
                     }
                 }
 				break;
-			case ColorType.Green:
+			case EColorType.Green:
 				foreach (Renderer renderer in _renderers)
                 {
                     foreach (Material material in renderer.materials)

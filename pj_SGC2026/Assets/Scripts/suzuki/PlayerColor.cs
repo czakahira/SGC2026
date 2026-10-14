@@ -4,7 +4,7 @@ public class PlayerColor : MonoBehaviour
 {
 	public static PlayerColor instance;
 
-	public ColorType currentColor = ColorType.Default;
+	public EColorType currentColor = EColorType.Default;
 
 	// ★ SkinnedMeshRenderer 1つを参照する
 	public Renderer playerRenderer;
@@ -14,7 +14,7 @@ public class PlayerColor : MonoBehaviour
 		instance = this;
 	}
 
-	public void SetColor(ColorType newColor)
+	public void SetColor(EColorType newColor)
 	{
 		currentColor = newColor;
 
@@ -22,16 +22,16 @@ public class PlayerColor : MonoBehaviour
 
 		switch (newColor)
 		{
-			case ColorType.Default:
+			case EColorType.Default:
 				targetColor = Color.white;
 				break;
-			case ColorType.Red:
+			case EColorType.Red:
 				targetColor = Color.red;
 				break;
-			case ColorType.Blue:
+			case EColorType.Blue:
 				targetColor = Color.blue;
 				break;
-			case ColorType.Green:
+			case EColorType.Green:
 				targetColor = Color.green;
 				break;
 		}

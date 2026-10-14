@@ -58,6 +58,10 @@ public class GameManager : SingletonBehaviour<GameManager>
 		base.OnLateUpdate(_dt);
 		onLateUpdate?.Invoke(_dt);
 	}
+
+	/// <summary>
+	/// アプリケーションを終了する
+	/// </summary>
 	public static void Quit()
 	{
 #if UNITY_EDITOR

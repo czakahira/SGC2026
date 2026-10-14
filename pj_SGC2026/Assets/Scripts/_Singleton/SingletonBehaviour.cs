@@ -16,15 +16,15 @@ public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 	/// </summary>
 	private static T s_Instance;
 	/// <summary>
-	/// 
+	/// 初期化済み
 	/// </summary>
-	private static bool s_IsActive;
+	private static bool s_Initialized;
 
 	// ========================================
 	//  Property
 	// ========================================
 	public static T instance => s_Instance;
-	public static bool active => s_IsActive;
+	public static bool active => s_Initialized;
 
 	// ========================================
 	//  Method
@@ -43,7 +43,7 @@ public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 	public static void Initialize()
 	{
 		// 既に起動済み
-		if (s_IsActive == true) { return; }
+		if (s_Initialized == true) { return; }
 
 		// 最初は空のはず
 		s_Instance = GameObject.FindAnyObjectByType<T>();
@@ -59,29 +59,32 @@ public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 		obj.name = name;
 		// 常駐
 		DontDestroyOnLoad(s_Instance.gameObject);
-		//
-		s_IsActive = true;
-		// 
+		// 初期化済み
+		s_Initialized = true;
+		// コールバック
 		(s_Instance as SingletonBehaviour<T>)?.OnInitialize();
 	}
 	/// <summary>
-	/// 
+	/// 初期化を試す
 	/// </summary>
 	public static bool TryInitialize()
 	{
 		Initialize();
-		return s_IsActive == true;
+		return s_Initialized == true;
 	}
 
 	protected virtual void OnDispose()
 	{
 
 	}
+	/// <summary>
+	/// 破棄 / 停止
+	/// </summary>
 	public static void Dispose()
 	{
-		if (s_IsActive == false) { return; }
+		if (s_Initialized == false) { return; }
 
-		s_IsActive = false;
+		s_Initialized = false;
 
 		(s_Instance as SingletonBehaviour<T>)?.OnDispose();
 		s_Instance = null;
