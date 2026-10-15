@@ -2,73 +2,86 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-/// <summary>
-/// UI の基底クラス
-/// </summary>
-[RequireComponent(typeof(RectTransform))]
-[RequireComponent(typeof(CanvasGroup))]
-public class UIComponent : UIBehaviour
+namespace SGC2026
 {
-
-	private RectTransform m_RectTransform;
-	private CanvasGroup m_CanvasGroup;
-
-	public RectTransform rectTransform
+	/// <summary>
+	/// UI の基底クラス
+	/// </summary>
+	[RequireComponent(typeof(RectTransform))]
+	[RequireComponent(typeof(CanvasGroup))]
+	public class UIComponent : UIBehaviour
 	{
-		get {
-			if (m_RectTransform == null) {
-				m_RectTransform = this.GetComponent<RectTransform>();
+
+		private RectTransform m_RectTransform;
+		private CanvasGroup m_CanvasGroup;
+
+		public RectTransform rectTransform
+		{
+			get {
+				if (m_RectTransform == null) {
+					m_RectTransform = this.GetComponent<RectTransform>();
+				}
+				return m_RectTransform;
 			}
-			return m_RectTransform;
 		}
-	}
-	public CanvasGroup canvasGroup
-	{
-		get {
-			if (m_CanvasGroup == null) {
-				m_CanvasGroup = this.GetComponent<CanvasGroup>();
+		public CanvasGroup canvasGroup
+		{
+			get {
+				if (m_CanvasGroup == null) {
+					m_CanvasGroup = this.GetComponent<CanvasGroup>();
+				}
+				return m_CanvasGroup;
 			}
-			return m_CanvasGroup;
 		}
-	}
-	public float alpha
-	{
-		get { return canvasGroup.alpha; }
-		set { canvasGroup.alpha = value; }
-	}
-	public bool blockRaycasts
-	{
-		get { return canvasGroup.blocksRaycasts; }
-		set { canvasGroup.blocksRaycasts = value; }
-	}
-	public bool interactable {
-		get { return canvasGroup.interactable; }
-		set { canvasGroup.interactable = value; }
-	}
+		public float alpha
+		{
+			get { return canvasGroup.alpha; }
+			set { canvasGroup.alpha = value; }
+		}
+		public bool blockRaycasts
+		{
+			get { return canvasGroup.blocksRaycasts; }
+			set { canvasGroup.blocksRaycasts = value; }
+		}
+		public bool interactable
+		{
+			get { return canvasGroup.interactable; }
+			set { canvasGroup.interactable = value; }
+		}
 
-	public void SetVisible(bool _value)
-	{
-		alpha = _value == true ? 1f : 0f;
-	}
-	public void SetInteract(bool _value)
-	{
-		blockRaycasts = _value;
-		interactable = _value;
-	}
+		public void SetActive(bool _value)
+		{
+			this.gameObject.SetActive(_value);
+		}
+		public void SetVisible(bool _value)
+		{
+			alpha = _value == true ? 1f : 0f;
+		}
+		public void SetInteract(bool _value)
+		{
+			blockRaycasts = _value;
+			interactable = _value;
+		}
 
-	protected override void Awake()
-	{
-		base.Awake();
+		protected virtual void Initialize()
+		{
 
-		UIManager.Add(this);
-	}
-	public virtual void OnUpdate(float _dt)
-	{
+		}
+		protected override void Awake()
+		{
+			base.Awake();
+
+			Initialize();
+			UIManager.Add(this);
+		}
+		public virtual void OnUpdate(float _dt)
+		{
+
+		}
+		protected override void OnDestroy()
+		{
+			UIManager.Remove(this);
+		}
 
 	}
-	protected override void OnDestroy()
-	{
-		UIManager.Remove(this);
-	}
-
 }

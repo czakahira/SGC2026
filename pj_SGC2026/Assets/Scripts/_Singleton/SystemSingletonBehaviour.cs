@@ -1,24 +1,27 @@
 
 using UnityEngine;
 
-public class SystemSingletonBehaviour<T> : SingletonBehaviour<T> where T : MonoBehaviour
+namespace SGC2026
 {
-
-	protected override void OnInitialize()
+	public class SystemSingletonBehaviour<T> : SingletonBehaviour<T> where T : MonoBehaviour
 	{
-		base.OnInitialize();
 
-		GameManager.instance.onUpdate += OnUpdate;
-		GameManager.instance.onFixedUpdate += OnFixedUpdate;
-		GameManager.instance.onLateUpdate += OnLateUpdate;
+		protected override void OnInitialize()
+		{
+			base.OnInitialize();
+
+			GameManager.instance.onUpdate += OnUpdate;
+			GameManager.instance.onFixedUpdate += OnFixedUpdate;
+			GameManager.instance.onLateUpdate += OnLateUpdate;
+		}
+		protected override void OnDispose()
+		{
+			base.OnDispose();
+
+			GameManager.instance.onUpdate -= OnUpdate;
+			GameManager.instance.onFixedUpdate -= OnFixedUpdate;
+			GameManager.instance.onLateUpdate -= OnLateUpdate;
+		}
+
 	}
-	protected override void OnDispose()
-	{
-		base.OnDispose();
-
-		GameManager.instance.onUpdate -= OnUpdate;
-		GameManager.instance.onFixedUpdate -= OnFixedUpdate;
-		GameManager.instance.onLateUpdate -= OnLateUpdate;
-	}
-
 }

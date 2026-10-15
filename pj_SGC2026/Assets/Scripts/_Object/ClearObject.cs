@@ -3,8 +3,13 @@ using UnityEngine;
 
 namespace SGC2026
 {
-	public class ClearObject : MonoBehaviour
+	/// <summary>
+	/// オブジェクト：ゴール
+	/// </summary>
+	public class ClearObject : DynamicObject
 	{
+
+#if false
 		[Header("リザルトパネル")]
 		public ResultPanel resultPanel;
 
@@ -30,6 +35,7 @@ namespace SGC2026
 			// ★ リザルトパネル表示（クリア用画像をON）
 			resultPanel.ShowClear();
 		}
+#endif
 
 	}
 }

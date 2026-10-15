@@ -511,8 +511,7 @@ GameObject:
   - component: {fileID: 2143590381696790288}
   - component: {fileID: 4002991201276377910}
   - component: {fileID: 1065604461317055738}
-  - component: {fileID: 5139895781348105772}
-  - component: {fileID: 6128818688982333007}
+  - component: {fileID: 17278137399380675}
   m_Layer: 0
   m_Name: player test
   m_TagString: Player
@@ -743,19 +742,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1c5a62564f336047a2728c13d4b9bdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  m_Collision: {fileID: 0}
   m_Input: {fileID: 7778590864604731670}
   m_CapsuleCollider: {fileID: 7590641136136704806}
   m_Rigidbody: {fileID: 3080593179071271870}
   m_Anim: {fileID: 8787467616449114806}
   m_Renderers: []
+  m_State: 0
+  m_Color: 0
   m_StateReserve: 0
+  m_CheckDistance: 0.5
+  m_CheckRadius: 1
   m_MaxSpeed: 10
   m_Acceleration: 4
   m_JumpForce: 7
   m_FallMultiplier: 2.5
   m_MaxJumpCount: 2
-  m_CheckDistance: 0.5
-  m_CheckRadius: 1
 --- !u!114 &1192715125789213850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -812,7 +814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4a15d65bbbd1a74d8f938aa53b830b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerColorInput
---- !u!114 &5139895781348105772
+--- !u!114 &17278137399380675
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -821,34 +823,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2309384648415389180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3db2d7fbe1c06fa4a87416eedb6964cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a674d97436df9247933b5acf29da599, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawn
-  fallThreshold: -8
-  _respawnAtCheckpoint: 0
-  _playerAnimator: {fileID: 0}
-  _deathTriggerName: Die
-  _respawnTriggerName: Respawn
-  _movementScript: {fileID: 0}
-  _backgroundLoop: {fileID: 0}
---- !u!114 &6128818688982333007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2309384648415389180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0bfd3d301a2839429983f4c1046d729, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerLife
-  life: 3
-  _deathDelaySeconds: 2
-  resultPanel: {fileID: 0}
-  playerRespawn: {fileID: 0}
-  cameraFollow: {fileID: 0}
-  scoreImageView: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::SGC2026.CollisionBahaviour
 --- !u!1 &2475815031866540063
 GameObject:
   m_ObjectHideFlags: 0

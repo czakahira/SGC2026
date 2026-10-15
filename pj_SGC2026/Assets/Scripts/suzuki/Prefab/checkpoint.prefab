@@ -78,6 +78,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d568b5cbba2118647ae26a27274d46b0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6203526828969539238}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d568b5cbba2118647ae26a27274d46b0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8670359544352399291}
   m_SourcePrefab: {fileID: 100100000, guid: d568b5cbba2118647ae26a27274d46b0, type: 3}
 --- !u!1 &5127773428945785552 stripped
 GameObject:
@@ -103,8 +106,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.2, z: 0.07}
-  m_Center: {x: 0, y: 0.1, z: 0.0005}
+  m_Size: {x: 0.1, y: 2, z: 0.07}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &6203526828969539238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,4 +120,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d05c6e3076b8dc408758409d4f91292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
-  respawnHeightOffset: 3
+  m_Collision: {fileID: 8670359544352399291}
+  m_RespawnHeightOffset: 3
+--- !u!114 &8670359544352399291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127773428945785552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a674d97436df9247933b5acf29da599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGC2026.CollisionBahaviour

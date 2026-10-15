@@ -6,6 +6,7 @@ public class ScoreImageView : MonoBehaviour
 	public NumberSpriteSet spriteSet;
 	public GameObject digitPrefab; // Image を持つプレハブ
 	public Transform digitRoot;    // 画像を並べる親
+
 	public void UpdateScore(int score)
 	{
 		Debug.Log("UpdateScore CALLED: " + score);

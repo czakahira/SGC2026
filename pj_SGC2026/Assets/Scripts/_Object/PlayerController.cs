@@ -19,12 +19,15 @@ namespace SGC2026
 			Run = 1 << 1,
 			Jump = 1 << 2,
 
+			Death = 1 << 3,
+
 			All = -1
 		}
 
 		// ========================================
 		//  Member
 		// ========================================
+		#region open
 
 		/// <summary>
 		/// 入力
@@ -53,17 +56,32 @@ namespace SGC2026
 		/// <summary>
 		/// 
 		/// </summary>
-		protected EState m_State = EState.None;
+		[SerializeField] protected EState m_State = EState.None;
 		/// <summary>
 		/// 
 		/// </summary>
-		protected EColorType m_Color;
+		[SerializeField] protected EColorType m_Color;
 		/// <summary>
 		/// 予約されたステート
 		/// </summary>
 		[SerializeField] protected EState m_StateReserve = EState.None;
-
-
+		/// <summary>
+		/// 自前の速度
+		/// </summary>
+		protected Vector3 m_Velocity;
+		// ------------------------------
+		//  接地
+		// ------------------------------
+		[SerializeField] protected float m_CheckDistance;
+		[SerializeField] protected float m_CheckRadius;
+		protected Vector3 m_CheckOrigin;
+		protected Vector3 m_CheckDist;
+		protected int m_HitCnt;
+		protected RaycastHit[] m_Hits;
+		protected bool m_Grounded;
+		// ------------------------------
+		//  移動
+		// ------------------------------
 		private bool m_CanMove = true;
 		/// <summary>
 		/// 最大速度
@@ -77,25 +95,21 @@ namespace SGC2026
 		/// 現行速度
 		/// </summary>
 		private float m_CurrentSpeed = 0f;
-
+		// ------------------------------
+		//  ジャンプ
+		// ------------------------------
 		[SerializeField] private float m_JumpForce = 7f;
 		[SerializeField] private float m_FallMultiplier = 2.5f;
 		[SerializeField] private int m_MaxJumpCount = 2;
 		private int m_CurrentJumpCount;
-
-		[SerializeField] protected float m_CheckDistance;
-		[SerializeField] protected float m_CheckRadius;
-		protected Vector3 m_CheckOrigin;
-		protected Vector3 m_CheckDist;
-		protected int m_HitCnt;
-		protected RaycastHit[] m_Hits;
-		protected bool m_Grounded;
+		#endregion
 
 		// ========================================
 		//  Property
 		// ========================================
 
 		public EColorType color => m_Color;
+		public Rigidbody rb => m_Rigidbody;
 		public Collider collider => m_CapsuleCollider;
 		public bool isGrounded => m_Grounded;
 
@@ -103,10 +117,32 @@ namespace SGC2026
 		// ========================================
 		//  Method
 		// ========================================
-
+		#region open
 		public void SetState(EState _state)
 		{
 			m_State = _state;
+			switch (m_State) {
+
+				case EState.Idle:
+					m_Anim.Play("Run");
+					break;
+
+				case EState.Run:
+					m_Anim.Play("Run");
+					break;
+
+				case EState.Jump:
+					break;
+
+				case EState.Death:
+					m_Anim.Play("Damage");
+					break;
+
+				case EState.None:
+				default:
+					break;
+
+			}
 		}
 		public bool IsState(EState _state)
 		{
@@ -117,15 +153,14 @@ namespace SGC2026
 			m_StateReserve |= _state;
 		}
 		/// <summary>
-		/// 
+		/// 色の変更
 		/// </summary>
-		/// <param name="_newColor"></param>
-		public void SetColor(EColorType _newColor)
+		public void SetColor(EColorType _color)
 		{
-			m_Color = _newColor;
+			m_Color = _color;
 
 			Color targetColor = Color.white;
-			switch (_newColor) {
+			switch (_color) {
 				case EColorType.Default:
 					targetColor = Color.white;
 					break;
@@ -149,6 +184,30 @@ namespace SGC2026
 				else {
 					mat.color = targetColor;
 				}
+			}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		protected void ChangeColorForInput()
+		{
+			EColorType clr = m_Color;
+
+			if (m_Input.actions["Change_Red"].IsPressed() == true) {
+				clr = EColorType.Red;
+			}
+			else if (m_Input.actions["Change_Blue"].IsPressed() == true) {
+				clr = EColorType.Blue;
+			}
+			else if (m_Input.actions["Change_Green"].IsPressed() == true) {
+				clr = EColorType.Green;
+			}
+			else {
+				clr = EColorType.Default;
+			}
+
+			if (clr != m_Color) {
+				SetColor(clr);
 			}
 		}
 
@@ -202,16 +261,17 @@ namespace SGC2026
 			m_CurrentSpeed = Mathf.Clamp(m_CurrentSpeed, 0f, m_MaxSpeed);
 
 			// 速度を反映
-			Vector3 vel = m_Rigidbody.linearVelocity;
+			Vector3 vel = m_Velocity;
 			vel.x = m_CurrentSpeed;
-			m_Rigidbody.linearVelocity = vel;
+			m_Velocity = vel;
 		}
 		public void StopMove()
 		{
-			m_CanMove = false;
+//			m_CanMove = false;
 
 			m_CurrentSpeed = 0f;
 
+			m_Velocity = Vector3.zero;
 			m_Rigidbody.linearVelocity = Vector3.zero;
 			m_Rigidbody.angularVelocity = Vector3.zero;
 		}
@@ -226,11 +286,21 @@ namespace SGC2026
 		protected void TryJump()
 		{
 			if (m_CurrentJumpCount < m_MaxJumpCount) {
-				Vector3 lv = m_Rigidbody.linearVelocity;
-				lv.y = m_JumpForce;
-				m_Rigidbody.linearVelocity = lv;
+				m_Velocity.y = m_JumpForce;
 				m_CurrentJumpCount++;
 			}
+		}
+
+		// ------------------------------
+		//  リスポーン
+		// ------------------------------
+
+		public void Respawn(Vector3 _pos)
+		{
+			StopMove();
+
+//			m_Rigidbody.MovePosition(_pos);
+			transform.position = _pos;
 		}
 
 		// ------------------------------
@@ -243,6 +313,7 @@ namespace SGC2026
 		{
 			base.Initialize();
 
+#if false
 			// 入力
 			if (m_Input != null) {
 				// 色変更
@@ -254,7 +325,7 @@ namespace SGC2026
 				m_Input.actions["Change_Blue"].canceled += ctx => SetColor(EColorType.Default);
 				m_Input.actions["Change_Green"].canceled += ctx => SetColor(EColorType.Default);
 			}
-
+#endif
 			// マテリアルの複製をキャッシュ
 			m_Renderers = this.GetComponentsInChildren<Renderer>();
 			m_Materials = new List<Material>(10);
@@ -293,28 +364,79 @@ namespace SGC2026
 
 			m_Anim.SetBool("IsGrounded", m_Grounded);
 
-			if (m_Input.actions["Jump"].WasPressedThisFrame() == true) {
-				RejistState(EState.Jump);
+			switch (m_State) {
+
+				case EState.Idle:
+
+					break;
+
+				case EState.Run:
+					ChangeColorForInput();
+
+					if (m_Input.actions["Jump"].WasPressedThisFrame() == true) {
+						RejistState(EState.Jump);
+					}
+					break;
+
+				case EState.Jump:
+					ChangeColorForInput();
+
+					if (m_Input.actions["Jump"].WasPressedThisFrame() == true) {
+						RejistState(EState.Jump);
+					}
+					break;
+
+				case EState.None:
+				default:
+					break;
 			}
 
 		}
 		public override void OnFixedUpdate(float _dt)
 		{
+			// 速度をキャッシュ
+			m_Velocity = m_Rigidbody.linearVelocity;
+
 			// 接地判定
 			GroundCheck();
-
-			// 移動
-			Move(_dt);
 
 			// ジャンプ
 			if (m_StateReserve.HasFlag(EState.Jump) == true) {
 				TryJump();
 			}
-			if (m_Rigidbody.linearVelocity.y < 0) {
-				m_Rigidbody.linearVelocity += Vector3.up * Physics.gravity.y * (m_FallMultiplier - 1) * _dt;
+
+			switch (m_State) {
+
+				case EState.Idle:
+
+					break;
+
+				case EState.Run:
+					// 移動
+					Move(_dt);
+					break;
+
+				case EState.Jump:
+					// 移動
+					Move(_dt);
+					break;
+
+				case EState.Death:
+					StopMove();
+					break;
+
+				case EState.None:
+				default:
+					break;
 			}
 
+			if (m_Velocity.y < 0) {
+				m_Velocity += Vector3.up * Physics.gravity.y * (m_FallMultiplier - 1f) * _dt;
+			}
+			// 予約を削除
 			m_StateReserve = EState.None;
+			// 速度を反映
+			m_Rigidbody.linearVelocity = m_Velocity;
 		}
 
 		private void OnDrawGizmos()
@@ -322,6 +444,7 @@ namespace SGC2026
 			Gizmos.color = Color.lightGreen;
 			Gizmos.DrawWireSphere(m_CheckDist, m_CheckRadius);
 		}
+		#endregion
 
 	}
 }

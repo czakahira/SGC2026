@@ -4,20 +4,22 @@ using UnityEngine.UI;
 
 namespace SGC2026
 {
-	public class LifeImageDisplay : MonoBehaviour
+	/// <summary>
+	/// UI:残機表示用
+	/// </summary>
+	public class LifeDisplay : UIComponent
 	{
-		[SerializeField] private PlayerLife _playerLife;
-		[SerializeField] private Image[] _digitImages;          // 左から右の順
+		[SerializeField] private Image[] _digitImages;				// 左から右の順
 		[SerializeField] private Sprite[] _digitSprites = new Sprite[10]; // 0～9
 
 		private int _displayedLife = int.MinValue;
 
-		private void Update()
-		{
-			if (_playerLife == null) return;
 
-			int life = Mathf.Max(0, _playerLife.life);
-			if (life == _displayedLife) return;
+		public void SetLife(int _value)
+		{
+			int life = Mathf.Max(0, _value);
+			if (life == _displayedLife) { return; }
+
 			_displayedLife = life;
 
 			string digits = life.ToString();

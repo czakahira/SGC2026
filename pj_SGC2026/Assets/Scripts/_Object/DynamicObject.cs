@@ -35,7 +35,7 @@ namespace SGC2026
 		}
 		public virtual void Dispose()
 		{
-			m_Collision.Clear();
+			m_Collision?.Clear();
 		}
 		public virtual void OnUpdate(float _dt)
 		{
